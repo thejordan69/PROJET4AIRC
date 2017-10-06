@@ -11,10 +11,10 @@ import model.Game;
  *
  */
 public class GameControler extends AbstractGameControler {
-	private Game sloubiGame;
+	private Game game;
 	
-	public GameControler(Game sloubiGame) {
-		super(sloubiGame);
+	public GameControler(Game game) {
+		super(game);
 	}
 
 	@Override

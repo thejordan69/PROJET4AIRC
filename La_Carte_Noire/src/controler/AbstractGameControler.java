@@ -16,11 +16,11 @@ import model.Game;
  */
 public abstract class AbstractGameControler implements GameControlers {
 
-	protected Game sloubiGame;	 
+	protected Game Game;	 
 
 	public AbstractGameControler(Game chessGame) {
 		super();
-		this.sloubiGame = sloubiGame;	 
+		this.Game = Game;	 
 	}
 
 	/* (non-Javadoc)

@@ -5,6 +5,15 @@
  */
 package view;
 
+import controler.GameControler;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Observer;
+import javax.swing.JTextField;
+import javax.swing.event.CaretListener;
+import model.Joueur;
+import model.Plateau;
+
 /**
  *
  * @author jcouston
@@ -16,11 +25,25 @@ public class PseudoGUI extends javax.swing.JFrame {
         private javax.swing.JTextField TF_Joueur1 = new javax.swing.JTextField();
         private javax.swing.JTextField TF_Joueur4 = new javax.swing.JTextField();
         private javax.swing.JTextField TF_Joueur3 = new javax.swing.JTextField();
+        
     public PseudoGUI() {
         initComponents();
     }
     
-   
+   private static GameControler controler;
+    private static Plateau plateau;
+    private static Dimension dim;
+    
+    //permet de créer une partie
+    public static void creerPartie(){
+        ArrayList listeJoueurs = new ArrayList<Joueur>();
+        listeJoueurs.add(new Joueur("Damien"));
+        listeJoueurs.add(new Joueur("Marion"));
+        plateau = new Plateau(listeJoueurs);
+        controler = new GameControler(plateau);
+        dim = new Dimension(800,800);
+        plateauGUI = new PlateauGUI(controler, dim);
+        controler.addObserver((Observer) plateauGUI);
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -184,6 +207,8 @@ public class PseudoGUI extends javax.swing.JFrame {
     if ((!TF_Joueur1.getText().equals(""))&(!TF_Joueur2.getText().equals(""))&(!TF_Joueur3.getText().equals(""))&(!TF_Joueur4.getText().equals("")))
         CB_Equipe.setEnabled(true);
     }
+
+    
     /**
      * @param args the command line arguments
      */

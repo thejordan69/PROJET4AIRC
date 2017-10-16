@@ -29,7 +29,14 @@ public class MenuGUI extends JFrame {
                 PseudoGUI pseudo = new PseudoGUI();
                 pseudo.setVisible(true);
             }
-        });  
+        }); 
+        bouton_regles.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                getContentPane().setVisible(false);
+                ReglesGUI regle = new ReglesGUI();
+                regle.setVisible(true);
+            }
+        }); 
         //ajout des boutons à la JFrame
         this.setLayout(new GridLayout(4, 1));
         this.add(bouton_jouer);

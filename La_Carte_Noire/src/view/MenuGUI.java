@@ -25,6 +25,7 @@ public class MenuGUI extends JFrame {
         //ajout des listeners aux boutons 
         bouton_jouer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                getContentPane().setVisible(false);
                 PseudoGUI pseudo = new PseudoGUI();
                 pseudo.setVisible(true);
             }

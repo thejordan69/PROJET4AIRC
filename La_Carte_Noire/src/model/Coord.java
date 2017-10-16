@@ -34,7 +34,7 @@ public class Coord implements Serializable {
 	 * @return true si les coordonn�es sont valides (dans un plateau de 8*8)
 	 */
 	public static boolean coordonnees_valides(int x, int y){
-		return ( (x<=7) && (x>=0) && (y<=7) && (y>=0) );
+		return ( (0<=x) && (x<=5) && (0<=y) && (y<=5) );
 	}
 
 	/* (non-Javadoc)

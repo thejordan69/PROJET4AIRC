@@ -1,67 +1,67 @@
 package controler;
 
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+import model.AbstractCarte;
 import model.Coord;
-import model.Game;
+import model.Couleur;
+import model.Joueur;
+import model.Plateau;
 
-/**
- * @author francoise.perrin
- * 
- *         Ce controleur local précise comment empêcher un joueur à qui ce n'est pas le tour 
- *         de jouer, de déplacer une image de pièce sur le damier
- *
- */
-public class GameControler extends AbstractGameControler {
-	private Game game;
+public class GameControler extends Observable implements InterfaceControler {
+	private Plateau plateau;
 	
-	public GameControler(Game game) {
-		super(game);
+	public GameControler(Plateau plateau) {
+		this.plateau = plateau;
+                this.notifyObservers(plateau.getListeCartes()); 
 	}
 
 	@Override
 	public boolean move(Coord initCoord, Coord finalCoord) {
-		// TODO Auto-generated method stub
-		return false;
+            boolean ret = false;
+            
+            ret = plateau.isMoveOK(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
+            if(ret){
+                ret = plateau.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
+            }
+            
+            this.notifyObservers(plateau.getListeCartes()); 
+            return ret;
+	}
+        
+        @Override
+        public Couleur getCarteCouleur(Coord coords){
+            return plateau.getCarteCouleur(coords.x,coords.y);
+        }
+
+       /* @Override
+        public Joueur getJoueurCourant(){		
+                    return plateau.getJoueurCourant();
+        }*/	
+        
+        @Override
+        public ArrayList<AbstractCarte> getListeCartes(){
+            return plateau.getListeCartes();
+        }
+        
+        @Override
+	public void notifyObservers(Object arg) {
+		super.setChanged();
+		super.notifyObservers(arg); 
 	}
 
-	@Override
-	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+	public void addObserver(Observer o){
+		super.addObserver(o);
+		this.notifyObservers(plateau.getListeCartes()); 
 	}
 
-	@Override
-	public boolean isEnd() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPlayerOK(Coord initCoord) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see controler.AbstractChessGameControler#isPlayerOK(model.Coord)
-	 * 
-	 * cette méthode vérifie que la couleur de la pièce que l'utilisateur
-	 * tente de déplacer est bien celle du jeu courant
-	 * la vue se servira de cette information pour empêcher tout déplacement sur le damier
-	 */
-/*	@Override
-	public boolean isPlayerOK(Coord initCoord) {
-		return (this.getColorCurrentPlayer() == this.getPieceColor(initCoord));
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see controler.AbstractChessGameControler#endMove(model.Coord, model.Coord, java.lang.String)
-	 * 
-	 * Pas d'action supplémentaire dans un contrôleur local en fin de move
-	 */
-	/*@Override
-	protected void endMove(Coord initCoord, Coord finalCoord,
-			String promotionType) {
-
-	}*/
+    @Override
+    public boolean isEnd() {
+       return plateau.isEnd();
+    }
+    
+    /*public ArrayList<Joueur> getListeJoueurs(){
+        return plateau.getListeJoueurs();
+    }*/
 }

@@ -1,32 +1,33 @@
 package launcher;
 
-import java.awt.Dimension;
-import java.util.Observer;
-import javax.swing.JFrame;
 import controler.GameControler;
-import model.Game;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Observer;
+import model.Joueur;
+import model.Plateau;
+import view.MenuGUI;
 import view.PlateauGUI;
-import controler.GameControlers;
 
 public class LauncherGUI {
-
-	public static void main(String[] args) {
-
-		Game sloubiGame;	
-		GameControlers sloubiGameControler;
-		JFrame frame;	
-		Dimension dim;
-	
-		//Window Menu = new Window();
-		dim = new Dimension(700, 700);
-		sloubiGame = new Game();	
-		sloubiGameControler = new GameControler(sloubiGame);
-		
-		frame = new PlateauGUI("Sloubi", sloubiGameControler,  dim);
-		sloubiGame.addObserver((Observer) frame);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation(600, 10);
-		frame.pack();
-		frame.setVisible(true);
-	}
+    private static PlateauGUI plateauGUI;
+    private static GameControler controler;
+    private static Plateau plateau;
+    private static Dimension dim;
+    
+    public static void main(String[] args) {
+        MenuGUI menu = new MenuGUI();           
+    }
+        
+    //permet de créer une partie
+    public static void creerPartie(){
+        ArrayList listeJoueurs = new ArrayList<Joueur>();
+        listeJoueurs.add(new Joueur("Damien"));
+        listeJoueurs.add(new Joueur("Marion"));
+        plateau = new Plateau(listeJoueurs);
+        controler = new GameControler(plateau);
+        dim = new Dimension(800,800);
+        plateauGUI = new PlateauGUI(controler, dim);
+        controler.addObserver((Observer) plateauGUI);
+    }
 }

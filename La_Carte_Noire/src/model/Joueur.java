@@ -12,6 +12,7 @@ public class Joueur {
         this.pseudo = pseudo;
         this.score = 0;
         this.nombreCartes = new HashMap<Couleur,Integer>();
+        this.nombreJetons = new HashMap<Couleur,Integer>();
         nombreCartes.put(Couleur.bleue,0);
         nombreCartes.put(Couleur.cyan,0);
         nombreCartes.put(Couleur.jaune,0);

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import launcher.LauncherGUI;
+import view.PseudoGUI;
 
 public class MenuGUI extends JFrame {
     
@@ -24,7 +25,8 @@ public class MenuGUI extends JFrame {
         //ajout des listeners aux boutons 
         bouton_jouer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                LauncherGUI.creerPartie();
+                PseudoGUI pseudo = new PseudoGUI();
+                pseudo.setVisible(true);
             }
         });  
         //ajout des boutons à la JFrame

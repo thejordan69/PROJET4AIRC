@@ -5,8 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import launcher.LauncherGUI;
-import view.PseudoGUI;
+import javax.swing.SwingUtilities;
 
 public class MenuGUI extends JFrame {
     
@@ -25,7 +24,7 @@ public class MenuGUI extends JFrame {
         //ajout des listeners aux boutons 
         bouton_jouer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                getContentPane().setVisible(false);
+                SwingUtilities.getWindowAncestor(getContentPane()).setVisible(false);
                 PseudoGUI pseudo = new PseudoGUI();
                 pseudo.setVisible(true);
             }

@@ -41,13 +41,20 @@ public class Joueur {
         return nombreCartes;
     }
     
+    public HashMap<Couleur, Integer> getNombreJetons() {
+        return nombreJetons;
+    }
+    
     public void incrémenterCarte(Couleur couleur){
         nombreCartes.replace(couleur, ((Integer) nombreCartes.get(couleur))+1);
         score++;
     }
     
-    private void miseAjourJeton(Couleur couleur){
-        
+    public void gagnerJeton(Couleur couleur){
+        nombreJetons.replace(couleur,1);
     }
     
+    public void perdreJeton(Couleur couleur){
+        nombreJetons.replace(couleur,0);
+    }
 }

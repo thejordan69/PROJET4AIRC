@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Observable;
 
 public class Plateau extends Observable implements InterfacePlateau {
-    HashMap<Coord,AbstractCarte> listeCartes;
+    ArrayList<AbstractCarte> listeCartes;
     ArrayList<Joueur> listeJoueurs;
     Joueur joueurCourant;
     CarteNoire carteNoire = null;
@@ -21,10 +21,11 @@ public class Plateau extends Observable implements InterfacePlateau {
 
     @Override
     public Couleur getCarteCouleur(int x, int y) {
-        AbstractCarte carte;
-        
-        carte = (AbstractCarte) listeCartes.get(new Coord(x,y));
-        return carte.getCouleur();
+        AbstractCarte carte = getCarte(x,y);
+        if(carte != null){
+            return carte.getCouleur();
+        }
+        return null;
     }
 
     @Override
@@ -40,9 +41,11 @@ public class Plateau extends Observable implements InterfacePlateau {
             min = Math.min(xInit, xFinal);
             max = Math.max(xInit, xFinal);
             for(int i=min;i<=max;i++){
-                carte = ((AbstractCarte) listeCartes.get(new Coord(i,yInit)));
-                if(carte !=null && carte.getCouleur() == choixCouleur){
+                carte = getCarte(i,yInit);
+               // carte = ((AbstractCarte) listeCartes.get(new Coord(i,yInit)));
+                if(carte != null && carte.getCouleur() == choixCouleur){
                     joueurCourant.incrémenterCarte(carte.getCouleur());
+                    miseAjourJeton(carte.getCouleur());
                     ((Carte) carte).eliminer();
                 }
             }  
@@ -52,17 +55,15 @@ public class Plateau extends Observable implements InterfacePlateau {
             min = Math.min(yInit, yFinal);
             max = Math.max(yInit, yFinal);
             for(int i=min;i<=max;i++){
-                carte = (AbstractCarte) listeCartes.get(new Coord(xInit,i));
+                carte = getCarte(xInit,i);
+                //carte = (AbstractCarte) listeCartes.get(new Coord(xInit,i));
                 if(carte != null && carte.getCouleur() == choixCouleur){
                     joueurCourant.incrémenterCarte(carte.getCouleur());
+                    miseAjourJeton(carte.getCouleur());
                     ((Carte) carte).eliminer();
                 }
             }  
         }
-        
-        //suppression de la carte noire dans la hashmap et recréation de celle-ci avec les nouvelles coordonnées en clé
-        listeCartes.remove(listeCartes.get(new Coord(xInit,yInit)));
-        listeCartes.put(new Coord(xFinal, yFinal), carteNoire);
         switchJoueur();
         return carteNoire.move(xFinal, yFinal);
     }
@@ -107,10 +108,21 @@ public class Plateau extends Observable implements InterfacePlateau {
     }
     
     private boolean isCarteHere(int x, int y){
-        return listeCartes.containsKey(new Coord(x,y));
+        if(getCarte(x, y) != null){
+            return true;
+        }
+        return false;
+    }
+    
+    private AbstractCarte getCarte(int x, int y){
+        for(AbstractCarte carte : listeCartes){
+            if(carte.getX() == x && carte.getY() == y){
+                return carte;
+            }
+        }
+        return null;
     }
 
-    @Override
     public Joueur getJoueurCourant(){
         return joueurCourant;
     }
@@ -126,11 +138,11 @@ public class Plateau extends Observable implements InterfacePlateau {
     }
     
     //méthode qui permet de renvoyer la liste des cartes qui vont être placées sur le damier
-    private HashMap<Coord,AbstractCarte> creerListeCartes(){        
+    private ArrayList<AbstractCarte> creerListeCartes(){        
         int i, random;
         Coord coords;
         AbstractCarte carte;
-        HashMap<Coord,AbstractCarte> listeCartes = new HashMap<>();
+        ArrayList<AbstractCarte> listeCartes = new ArrayList<>();
         //création de deux tableaux permettant d'associer la couleur des cartes avec leur nombre respectif
         Couleur couleurs[] = {Couleur.bleue,Couleur.verte,Couleur.rouge,Couleur.rose,Couleur.jaune,Couleur.cyan,Couleur.orange,Couleur.noire};
 	int nombres[] = {8,7,6,5,4,3,2,1};
@@ -152,18 +164,17 @@ public class Plateau extends Observable implements InterfacePlateau {
             }
             //décrémentation du nombre de carte de la couleur sélectionnée
             nombres[random]--;
-            listeCartes.put(coords, carte);
+            listeCartes.add(carte);
         }
         return listeCartes;
     }
     
     //méthode qui permet de renvoyer une copie des cartes créées
-    @Override
     public ArrayList<AbstractCarte> getListeCartes(){
         ArrayList<AbstractCarte> listeCopie = new ArrayList();
         
-        for(Map.Entry entry : listeCartes.entrySet()){
-            listeCopie.add((AbstractCarte) entry.getValue());
+        for(AbstractCarte carte : listeCartes){
+            listeCopie.add(carte);
         }
         
         return listeCopie;
@@ -179,6 +190,34 @@ public class Plateau extends Observable implements InterfacePlateau {
         else{
             joueurCourant = listeJoueurs.get(indexCourant+1);
         }
-        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " qui a un score de " + joueurCourant.getScore());
+        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore());
+    }
+    
+    private void miseAjourJeton(Couleur couleur){
+        int max = 0;
+        Joueur meilleur = null;
+        
+        for(Joueur tmp : listeJoueurs){
+            //récupère le joueur ayant le jeton de la couleur spécifiée ainsi que son nombre de carte pour cette couleur
+            if((tmp.getNombreJetons().get(couleur) == 1) && !(tmp.getPseudo().equals(joueurCourant.getPseudo()))){
+                meilleur = tmp;
+                max = tmp.getNombreCartes().get(couleur);
+            }
+        }
+
+        if(meilleur != null){
+            //si le joueur courant a plus de carte que le meilleur actuel
+            if(joueurCourant.getNombreCartes().get(couleur) >= max){
+                joueurCourant.gagnerJeton(couleur);
+                meilleur.perdreJeton(couleur);
+                meilleur = null;
+                System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
+            }
+        }
+        //sinon c'est le premier joueur à gagner le jeton
+        else{
+            joueurCourant.gagnerJeton(couleur);
+            System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
+        }
     }
 }

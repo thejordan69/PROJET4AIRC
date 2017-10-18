@@ -31,6 +31,7 @@ public class MenuGUI extends JFrame {
         }); 
         bouton_regles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                SwingUtilities.getWindowAncestor(getContentPane()).setVisible(false);
                 getContentPane().setVisible(false);
                 ReglesGUI regle = new ReglesGUI();
                 regle.setVisible(true);

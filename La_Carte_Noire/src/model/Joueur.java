@@ -9,10 +9,9 @@ public class Joueur {
     private HashMap<Couleur,Integer> nombreCartes;
     private HashMap<Couleur,Integer> nombreJetons;
     
-    public Joueur(String pseudo, Equipe equipe){
+    public Joueur(String pseudo){
         this.pseudo = pseudo;
         this.score = 0;
-        this.equipe = equipe;
         this.nombreCartes = new HashMap<Couleur,Integer>();
         this.nombreJetons = new HashMap<Couleur,Integer>();
         nombreCartes.put(Couleur.bleue,0);
@@ -68,5 +67,9 @@ public class Joueur {
     
     public void perdreJeton(Couleur couleur){
         nombreJetons.replace(couleur,0);
+    }
+    
+    public void intégrerEquipe(Equipe equipe){
+        this.equipe = equipe;
     }
 }

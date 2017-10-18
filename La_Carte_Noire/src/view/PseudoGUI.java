@@ -1,7 +1,6 @@
 package view;
 
 import controler.GameControler;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import model.Equipe;
 import model.Joueur;
 import model.Plateau;
 
@@ -227,12 +227,8 @@ public class PseudoGUI extends JFrame {
            if(!tmp.equals("") && Collections.frequency(pseudo,tmp) == 1){
                count = count + 1;
            }
-           else{
-               BT_Jouer.setEnabled(false);
-           }
-         
         }
-        if ((count == nbJoueur)&& (nbJoueur >1)){
+        if ((count == nbJoueur) && (nbJoueur >1)){
             if (nbJoueur >3){
                  BT_Jouer.setEnabled(true);
                  CB_Equipe.setEnabled(true);
@@ -254,21 +250,35 @@ public class PseudoGUI extends JFrame {
     }
 
     private void creerPartie(){
-        ArrayList<Joueur> listeJoueurs;
+        ArrayList<Joueur> listeJoueurs, joueursEquipe1, joueursEquipe2;
+        Equipe equipe1, equipe2;
+        Joueur joueur1, joueur2, joueur3, joueur4;
         
-        /*listeJoueurs.add(new Joueur(TF_Joueur1.getText()));
-        listeJoueurs.add(new Joueur(TF_Joueur2.getText()));
+        joueur1 = new Joueur(TF_Joueur1.getText());
+        joueur2 = new Joueur(TF_Joueur2.getText());
+        listeJoueurs = new ArrayList<>();
+        listeJoueurs.add(joueur1);
+        listeJoueurs.add(joueur2);
         if(!TF_Joueur3.getText().equals("")){
-            listeJoueurs.add(new Joueur(TF_Joueur3.getText()));
+            joueur3 = new Joueur(TF_Joueur3.getText());
+            listeJoueurs.add(joueur3);
         }
         if(!TF_Joueur4.getText().equals("")){
-            listeJoueurs.add(new Joueur(TF_Joueur4.getText()));
+            joueur4 = new Joueur(TF_Joueur3.getText());
+            listeJoueurs.add(joueur4);
         }
-        plateau = new Plateau(listeJoueurs);
+
+        joueursEquipe1 = new ArrayList<>();
+        joueursEquipe1.add(joueur1);
+        joueursEquipe1.add(joueur3);
+        joueursEquipe2 = new ArrayList<>();
+        joueursEquipe2.add(joueur2);
+        joueursEquipe2.add(joueur4);
+        plateau = new Plateau(listeJoueurs, joueursEquipe1, joueursEquipe2);
         controler = new GameControler(plateau);
         dim = new Dimension(800,800);
         plateauGUI = new PlateauGUI(controler, dim);
-        controler.addObserver((Observer) plateauGUI);*/
+        controler.addObserver((Observer) plateauGUI);
     }
 }
 

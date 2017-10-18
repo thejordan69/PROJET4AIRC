@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import model.Couleur;
 
-public class ChessImageProvider {
+public class ImageProvider {
 	
 	/**
 	 * private pour ne pas instancier d'objets
 	 */
-	private ChessImageProvider() {
+	private ImageProvider() {
 
 	}	
 	

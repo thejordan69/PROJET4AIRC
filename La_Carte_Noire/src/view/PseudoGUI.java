@@ -212,67 +212,29 @@ public class PseudoGUI extends JFrame {
     }
     
     private void checkChamps(){
-       /* if(!TF_Joueur1.getText().equals("") && !TF_Joueur2.getText().equals("")){
-            BT_Jouer.setEnabled(true);
+        ArrayList<String> pseudo = new ArrayList<String>();
+        int i = 0;
+        pseudo.add(TF_Joueur1.getText());
+        pseudo.add(TF_Joueur2.getText());
+        pseudo.add(TF_Joueur3.getText());
+        pseudo.add(TF_Joueur4.getText());
+
+        for(String tmp : pseudo){
+           if(!tmp.equals("") && Collections.frequency(pseudo,tmp) == 1){
+               BT_Jouer.setEnabled(true);
+           }
+           else{
+               BT_Jouer.setEnabled(false);
+           }
         }
-        else{
-            BT_Jouer.setEnabled(false);
-        }*/
-       /* if ((!TF_Joueur1.getText().equals("") && (!TF_Joueur2.getText().equals("")) && (TF_Joueur3.getText().equals("")&& (TF_Joueur4.getText().equals(""))))){
-          if ((!TF_Joueur1.getText().equals(TF_Joueur2.getText())))
-            CB_Equipe.setEnabled(true); 
-        else if ((!TF_Joueur1.getText().equals("") && (!TF_Joueur2.getText().equals("")) && (!TF_Joueur3.getText().equals("")))){
-           if ((!TF_Joueur1.getText().equals(TF_Joueur2.getText())) && (!TF_Joueur1.getText().equals(TF_Joueur3.getText())) && (!TF_Joueur2.getText().equals(TF_Joueur3.getText())))
-            CB_Equipe.setEnabled(true);   }
-           else if ((!TF_Joueur1.getText().equals("") && (!TF_Joueur2.getText().equals("")) && (!TF_Joueur3.getText().equals("")&& (!TF_Joueur4.getText().equals(""))))){
-               if ((!TF_Joueur1.getText().equals(TF_Joueur2.getText())) && (!TF_Joueur1.getText().equals(TF_Joueur3.getText())) && (!TF_Joueur1.getText().equals(TF_Joueur4.getText()))&& (!TF_Joueur2.getText().equals(TF_Joueur4.getText())) && (!TF_Joueur2.getText().equals(TF_Joueur3.getText()))&& (!TF_Joueur3.getText().equals(TF_Joueur4.getText())))
-                CB_Equipe.setEnabled(true);
-        }
-        else {
-           CB_Equipe.setEnabled(false); 
-           */
-           ArrayList<String> pseudo = new ArrayList<String>();
-           int occurence = 0, i = 0;
-           occurence = 0;
-            pseudo.add(TF_Joueur1.getText());
-            pseudo.add(TF_Joueur2.getText());
-            pseudo.add(TF_Joueur3.getText());
-            pseudo.add(TF_Joueur4.getText());
-            
-            for(String tmp : pseudo){
-                /*if (!tmp.equals("")){
-                occurence = occurence + Collections.frequency(pseudo,tmp);
-                
-                }
-                if ((occurence ==2) || (occurence ==3 ) || (occurence ==4))
-                    BT_Jouer.setEnabled(true);
-                else BT_Jouer.setEnabled(false);*/
-                if(!tmp.equals("") && Collections.frequency(pseudo,tmp) == 1){
-                    BT_Jouer.setEnabled(true);
-                }
-                else{
-                BT_Jouer.setEnabled(false);
-                }
-            }
-            
-            /*occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur1.getText()));
-            system.out.println(occurence);
-            occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur2.getText()));
-            occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur3.getText()));
-            occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur4.getText()));
-            if (occurence ==4)
-                BT_Jouer.setEnabled(true);
-            else
-                BT_Jouer.setEnabled(false);
-            */
         }
 
     
 
     private void creerPartie(){
-        ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>();
+        ArrayList<Joueur> listeJoueurs;
         
-        listeJoueurs.add(new Joueur(TF_Joueur1.getText()));
+        /*listeJoueurs.add(new Joueur(TF_Joueur1.getText()));
         listeJoueurs.add(new Joueur(TF_Joueur2.getText()));
         if(!TF_Joueur3.getText().equals("")){
             listeJoueurs.add(new Joueur(TF_Joueur3.getText()));
@@ -284,20 +246,7 @@ public class PseudoGUI extends JFrame {
         controler = new GameControler(plateau);
         dim = new Dimension(800,800);
         plateauGUI = new PlateauGUI(controler, dim);
-        controler.addObserver((Observer) plateauGUI);
+        controler.addObserver((Observer) plateauGUI);*/
     }
 }
-    /*
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BT_Jouer;
-    private javax.swing.JButton BT_Retour;
-    private javax.swing.JCheckBox CB_Equipe;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JSeparator jSeparator3;
-    // End of variables declaration//GEN-END:variables
-    */
 

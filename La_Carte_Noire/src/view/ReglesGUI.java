@@ -51,10 +51,8 @@ public class ReglesGUI extends JFrame{
         
         bouton_retour.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                
                 //fermeture du Jpanel
                 SwingUtilities.getWindowAncestor(getContentPane()).setVisible(false);
-                
                 //ouverture du menu principal MenuGUI
                 MenuGUI menu = new MenuGUI();
                 menu.setVisible(true);      
@@ -64,9 +62,5 @@ public class ReglesGUI extends JFrame{
         //affichage du bouton retour en bas du Jpannel
         pannel.setLayout(new BorderLayout());
         pannel.add(bouton_retour,BorderLayout.SOUTH);        
-    }
-    public static void main(String args[]) {
-        ReglesGUI regle = new ReglesGUI();
-        regle.setVisible(true);
     }
 }

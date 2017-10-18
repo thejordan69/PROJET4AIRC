@@ -214,22 +214,44 @@ public class PseudoGUI extends JFrame {
     private void checkChamps(){
         ArrayList<String> pseudo = new ArrayList<String>();
         int i = 0;
+        int count = 0;
+        int nbJoueur = 0;
         pseudo.add(TF_Joueur1.getText());
         pseudo.add(TF_Joueur2.getText());
         pseudo.add(TF_Joueur3.getText());
         pseudo.add(TF_Joueur4.getText());
-
+        
+        nbJoueur = CheckNbJoueur(pseudo);
+        
         for(String tmp : pseudo){
            if(!tmp.equals("") && Collections.frequency(pseudo,tmp) == 1){
-               BT_Jouer.setEnabled(true);
+               count = count + 1;
            }
            else{
                BT_Jouer.setEnabled(false);
            }
+         
         }
+        if ((count == nbJoueur)&& (nbJoueur >1)){
+            if (nbJoueur >3){
+                 BT_Jouer.setEnabled(true);
+                 CB_Equipe.setEnabled(true);
+            }
+            else 
+                 BT_Jouer.setEnabled(true);
+                }        
+        else 
+            BT_Jouer.setEnabled(false);
         }
 
-    
+    private int CheckNbJoueur(ArrayList<String> pseudo){
+        int i, count=0;
+        for (i=0; i<4; i++){
+            if (!pseudo.get(i).equals(""))
+                count = count + 1;
+        }
+        return count;
+    }
 
     private void creerPartie(){
         ArrayList<Joueur> listeJoueurs;

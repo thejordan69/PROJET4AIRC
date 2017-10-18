@@ -1,9 +1,11 @@
 package view;
 
 import controler.GameControler;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -190,6 +192,7 @@ public class PseudoGUI extends JFrame {
                     .addComponent(BT_Jouer)
                     .addGap(8, 8, 8)))
         );
+        
         this.pack();
         this.setLocationRelativeTo(null);
     }
@@ -209,13 +212,62 @@ public class PseudoGUI extends JFrame {
     }
     
     private void checkChamps(){
-        if(!TF_Joueur1.getText().equals("") && !TF_Joueur2.getText().equals("")){
+       /* if(!TF_Joueur1.getText().equals("") && !TF_Joueur2.getText().equals("")){
             BT_Jouer.setEnabled(true);
         }
         else{
             BT_Jouer.setEnabled(false);
+        }*/
+       /* if ((!TF_Joueur1.getText().equals("") && (!TF_Joueur2.getText().equals("")) && (TF_Joueur3.getText().equals("")&& (TF_Joueur4.getText().equals(""))))){
+          if ((!TF_Joueur1.getText().equals(TF_Joueur2.getText())))
+            CB_Equipe.setEnabled(true); 
+        else if ((!TF_Joueur1.getText().equals("") && (!TF_Joueur2.getText().equals("")) && (!TF_Joueur3.getText().equals("")))){
+           if ((!TF_Joueur1.getText().equals(TF_Joueur2.getText())) && (!TF_Joueur1.getText().equals(TF_Joueur3.getText())) && (!TF_Joueur2.getText().equals(TF_Joueur3.getText())))
+            CB_Equipe.setEnabled(true);   }
+           else if ((!TF_Joueur1.getText().equals("") && (!TF_Joueur2.getText().equals("")) && (!TF_Joueur3.getText().equals("")&& (!TF_Joueur4.getText().equals(""))))){
+               if ((!TF_Joueur1.getText().equals(TF_Joueur2.getText())) && (!TF_Joueur1.getText().equals(TF_Joueur3.getText())) && (!TF_Joueur1.getText().equals(TF_Joueur4.getText()))&& (!TF_Joueur2.getText().equals(TF_Joueur4.getText())) && (!TF_Joueur2.getText().equals(TF_Joueur3.getText()))&& (!TF_Joueur3.getText().equals(TF_Joueur4.getText())))
+                CB_Equipe.setEnabled(true);
         }
-    }
+        else {
+           CB_Equipe.setEnabled(false); 
+           */
+           ArrayList<String> pseudo = new ArrayList<String>();
+           int occurence = 0, i = 0;
+           occurence = 0;
+            pseudo.add(TF_Joueur1.getText());
+            pseudo.add(TF_Joueur2.getText());
+            pseudo.add(TF_Joueur3.getText());
+            pseudo.add(TF_Joueur4.getText());
+            
+            for(String tmp : pseudo){
+                /*if (!tmp.equals("")){
+                occurence = occurence + Collections.frequency(pseudo,tmp);
+                
+                }
+                if ((occurence ==2) || (occurence ==3 ) || (occurence ==4))
+                    BT_Jouer.setEnabled(true);
+                else BT_Jouer.setEnabled(false);*/
+                if(!tmp.equals("") && Collections.frequency(pseudo,tmp) == 1){
+                    BT_Jouer.setEnabled(true);
+                }
+                else{
+                BT_Jouer.setEnabled(false);
+                }
+            }
+            
+            /*occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur1.getText()));
+            system.out.println(occurence);
+            occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur2.getText()));
+            occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur3.getText()));
+            occurence = occurence + Collections.frequency(pseudo, pseudo.add(TF_Joueur4.getText()));
+            if (occurence ==4)
+                BT_Jouer.setEnabled(true);
+            else
+                BT_Jouer.setEnabled(false);
+            */
+        }
+
+    
 
     private void creerPartie(){
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>();
@@ -234,7 +286,7 @@ public class PseudoGUI extends JFrame {
         plateauGUI = new PlateauGUI(controler, dim);
         controler.addObserver((Observer) plateauGUI);
     }
-
+}
     /*
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BT_Jouer;
@@ -248,4 +300,4 @@ public class PseudoGUI extends JFrame {
     private javax.swing.JSeparator jSeparator3;
     // End of variables declaration//GEN-END:variables
     */
-}
+

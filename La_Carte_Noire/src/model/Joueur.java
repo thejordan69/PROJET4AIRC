@@ -1,16 +1,18 @@
-package model;
+ package model;
 
 import java.util.HashMap;
 
 public class Joueur {
     private String pseudo;
     private int score;
+    private Equipe equipe;
     private HashMap<Couleur,Integer> nombreCartes;
     private HashMap<Couleur,Integer> nombreJetons;
     
-    public Joueur(String pseudo){
+    public Joueur(String pseudo, Equipe equipe){
         this.pseudo = pseudo;
         this.score = 0;
+        this.equipe = equipe;
         this.nombreCartes = new HashMap<Couleur,Integer>();
         this.nombreJetons = new HashMap<Couleur,Integer>();
         nombreCartes.put(Couleur.bleue,0);
@@ -36,7 +38,11 @@ public class Joueur {
     public int getScore() {
         return score;
     }
-
+    
+    public Equipe getEquipe(){
+        return equipe;
+    }
+    
     public HashMap<Couleur, Integer> getNombreCartes() {
         return nombreCartes;
     }

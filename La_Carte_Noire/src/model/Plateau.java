@@ -1,8 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 
 public class Plateau extends Observable implements InterfacePlateau {
@@ -42,11 +40,8 @@ public class Plateau extends Observable implements InterfacePlateau {
             max = Math.max(xInit, xFinal);
             for(int i=min;i<=max;i++){
                 carte = getCarte(i,yInit);
-               // carte = ((AbstractCarte) listeCartes.get(new Coord(i,yInit)));
                 if(carte != null && carte.getCouleur() == choixCouleur){
-                    joueurCourant.incrémenterCarte(carte.getCouleur());
-                    miseAjourJeton(carte.getCouleur());
-                    ((Carte) carte).eliminer();
+                    gagnerCarte((Carte)carte);
                 }
             }  
         }
@@ -56,11 +51,8 @@ public class Plateau extends Observable implements InterfacePlateau {
             max = Math.max(yInit, yFinal);
             for(int i=min;i<=max;i++){
                 carte = getCarte(xInit,i);
-                //carte = (AbstractCarte) listeCartes.get(new Coord(xInit,i));
                 if(carte != null && carte.getCouleur() == choixCouleur){
-                    joueurCourant.incrémenterCarte(carte.getCouleur());
-                    miseAjourJeton(carte.getCouleur());
-                    ((Carte) carte).eliminer();
+                    gagnerCarte((Carte)carte);
                 }
             }  
         }
@@ -68,6 +60,16 @@ public class Plateau extends Observable implements InterfacePlateau {
         return carteNoire.move(xFinal, yFinal);
     }
 
+    //méthode qui est appellé lors d'un gain d'une carte
+    private void gagnerCarte(Carte carte){
+        joueurCourant.incrémenterCarte(carte.getCouleur());
+        if(joueurCourant.getEquipe() != null){
+            joueurCourant.getEquipe().incrementerScore();
+        }
+        miseAjourJeton(carte.getCouleur());
+        carte.eliminer();
+    }
+    
     //méthode qui permet de tester si la partie est terminée
     @Override
     public boolean isEnd() {

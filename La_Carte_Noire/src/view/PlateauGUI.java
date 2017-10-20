@@ -31,8 +31,6 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         private int xAdjustment, yAdjustment, oldIndex;
         
 	public PlateauGUI(Dimension boardSize, HashMap<String,Integer> mapJoueurs) {
-            this.controler = new GameControler(mapJoueurs);
-            this.controler.addObserver((Observer) this);
             this.setTitle("Damier");
             this.setSize(boardSize);
             this.setLocationRelativeTo(null);
@@ -50,7 +48,8 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             panel.setPreferredSize(boardSize);
             panel.setBounds(0, 0, boardSize.width, boardSize.height);
             this.createGrid();
-            
+            this.controler = new GameControler(mapJoueurs);
+            this.controler.addObserver((Observer) this);
 	}    
 	
     //méthode qui permet de créer le damier

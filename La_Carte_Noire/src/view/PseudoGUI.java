@@ -350,8 +350,11 @@ public class PseudoGUI extends JFrame {
     }
 
     private void creerPartie(){
-        HashMap<String, Integer> map = new HashMap();
-    
+        HashMap<String, Integer> mapJoueurs = new HashMap();
+        dim = new Dimension(800,800);
+        plateauGUI = new PlateauGUI(dim,mapJoueurs);
+        
+        
 /*
         joueur1 = new Joueur(TF_Joueur1.getText());
         joueur2 = new Joueur(TF_Joueur2.getText());

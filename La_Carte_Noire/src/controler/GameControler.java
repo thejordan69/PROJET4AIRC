@@ -13,8 +13,8 @@ public class GameControler extends Observable implements InterfaceControler {
 	private Plateau plateau;
 	
 	public GameControler(HashMap<String,Integer> mapJoueurs) {
-		this.plateau = new Plateau(mapJoueurs);
-                this.notifyObservers(plateau.getListeCartes()); 
+            this.plateau = new Plateau(mapJoueurs);
+            this.notifyObservers(plateau.getListeCartes()); 
 	}
 
 	@Override

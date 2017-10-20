@@ -21,7 +21,8 @@ public class Plateau extends Observable implements InterfacePlateau {
     //méthode qui permet d'initialiser les joueurs ainsi que leur potentielle équipe
     private void initJoueurs(HashMap<String,Integer> mapJoueurs){
         Joueur joueur;
-      
+        
+        listeJoueurs = new ArrayList<Joueur>();      
         //check si le mode par équipe est activé
         if(mapJoueurs.containsValue(1)){
             equipe1 = new Equipe();

@@ -53,7 +53,13 @@ public class Joueur {
     
     public void incrémenterCarte(Couleur couleur){
         nombreCartes.replace(couleur, ((Integer) nombreCartes.get(couleur))+1);
+    }
+    
+    public void incrémenterScores(){
         score++;
+        if(this.getEquipe() != null){
+            this.getEquipe().incrementerScore();
+        }
     }
     
     public void gagnerJeton(Couleur couleur){

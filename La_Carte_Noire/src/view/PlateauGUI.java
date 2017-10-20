@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import model.AbstractCarte;
 import model.Coord;
 import model.Couleur;
-import tools.ChessImageProvider;
+import tools.ImageProvider;
 
 public class PlateauGUI extends JFrame implements MouseListener, MouseMotionListener, Observer {
         private GameControler controler;
@@ -170,7 +170,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             //si la carte n'est pas déjà gagnée
             if((tmp.getX() != -1) && (tmp.getY() != -1)){
                 index = tmp.getX()+tmp.getY()*6;
-                jLabelCarte = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(tmp.getCouleur())));
+                jLabelCarte = new JLabel(new ImageIcon(ImageProvider.getImageFile(tmp.getCouleur())));
                 pan = (JPanel) panel.getComponent(index);
                 pan.add(jLabelCarte);
             } 

@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class Plateau extends Observable implements InterfacePlateau {
-    ArrayList<AbstractCarte> listeCartes;
-    ArrayList<Joueur> listeJoueurs;
-    Joueur joueurCourant;
-    CarteNoire carteNoire = null;
+    private ArrayList<AbstractCarte> listeCartes;
+    private ArrayList<Joueur> listeJoueurs;
+    private Joueur joueurCourant;
+    private CarteNoire carteNoire = null;
+    private Equipe equipe1, equipe2, equipeCourante;
     
-    public Plateau(ArrayList<Joueur> joueurs){
+    public Plateau(ArrayList<Joueur> joueurs, Equipe equipe1, Equipe equipe2){
         //création de la collection de cartes du pateau
         this.listeCartes = creerListeCartes();
         //initialisation de la liste des joueurs et fixation du premier joueur à jouer
         this.listeJoueurs = joueurs;
         this.joueurCourant = listeJoueurs.get(0);
+        this.equipe1 = equipe1;
+        this.equipe2 = equipe2;
     } 
 
     @Override
@@ -63,9 +66,7 @@ public class Plateau extends Observable implements InterfacePlateau {
     //méthode qui est appellé lors d'un gain d'une carte
     private void gagnerCarte(Carte carte){
         joueurCourant.incrémenterCarte(carte.getCouleur());
-        if(joueurCourant.getEquipe() != null){
-            joueurCourant.getEquipe().incrementerScore();
-        }
+        joueurCourant.incrémenterScores();
         miseAjourJeton(carte.getCouleur());
         carte.eliminer();
     }

@@ -373,7 +373,7 @@ public class PseudoGUI extends JFrame {
         joueursEquipe2 = new ArrayList<>();
         joueursEquipe2.add(joueur2);
         joueursEquipe2.add(joueur4);
-        plateau = new Plateau(listeJoueurs, joueursEquipe1, joueursEquipe2);
+        plateau = new Plateau(listeJoueurs);
         controler = new GameControler(plateau);
         dim = new Dimension(800,800);
         plateauGUI = new PlateauGUI(controler, dim);

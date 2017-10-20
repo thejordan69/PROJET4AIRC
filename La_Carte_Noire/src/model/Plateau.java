@@ -231,17 +231,15 @@ public class Plateau extends Observable implements InterfacePlateau {
         }
         //mode de jeu par équipe
         else{
-            int indexCourant = equipeCourante.getJoueurs().indexOf(joueurCourant);
-            int nbJoueurs = equipeCourante.getJoueurs().size();
+            //si équipe1, on prend dans l'équipe2 au même index
             if(equipeCourante == equipe1){
-                if(indexCourant == (nbJoueurs-1)){
-                    joueurCourant = equipe2.getJoueurs().get(0);
-                }
-                else{
-                    joueurCourant = equipe2.getJoueurs().get(indexCourant+1);
-                }
+                int indexCourant = equipeCourante.getJoueurs().indexOf(joueurCourant);
+                joueurCourant = equipe2.getJoueurs().get(indexCourant);
             }
+            //si équipe2, on check que c'est pas la fin de l'équipe1, et on prend le suivant
             else{
+                int indexCourant = equipeCourante.getJoueurs().indexOf(joueurCourant);
+                int nbJoueurs = equipeCourante.getJoueurs().size();
                 if(indexCourant == (nbJoueurs-1)){
                     joueurCourant = equipe1.getJoueurs().get(0);
                 }

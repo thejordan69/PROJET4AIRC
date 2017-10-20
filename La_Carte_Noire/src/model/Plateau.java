@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 public class Plateau extends Observable implements InterfacePlateau {
@@ -8,18 +10,49 @@ public class Plateau extends Observable implements InterfacePlateau {
     private ArrayList<Joueur> listeJoueurs;
     private Joueur joueurCourant;
     private CarteNoire carteNoire = null;
-    private Equipe equipe1, equipe2, equipeCourante;
+    private Equipe equipe1, equipe2;
     
-    public Plateau(ArrayList<Joueur> joueurs, Equipe equipe1, Equipe equipe2){
+    public Plateau(HashMap<String,Integer> mapJoueurs){
         //création de la collection de cartes du pateau
         this.listeCartes = creerListeCartes();
-        //initialisation de la liste des joueurs et fixation du premier joueur à jouer
-        this.listeJoueurs = joueurs;
-        this.joueurCourant = listeJoueurs.get(0);
-        this.equipe1 = equipe1;
-        this.equipe2 = equipe2;
+        initJoueurs(mapJoueurs);
     } 
 
+    //méthode qui permet d'initialiser les joueurs ainsi que leur potentielle équipe
+    private void initJoueurs(HashMap<String,Integer> mapJoueurs){
+        Joueur joueur;
+      
+        //check si le mode par équipe est activé
+        if(mapJoueurs.containsValue(1)){
+            equipe1 = new Equipe();
+            equipe2 = new Equipe();
+            for(Map.Entry<String,Integer> e : mapJoueurs.entrySet()){
+                joueur = new Joueur(e.getKey());
+                if(e.getValue() == 1){
+                    joueur.intégrerEquipe(equipe1);
+                    equipe1.intégrerJoueur(joueur);
+                    listeJoueurs.add(joueur);
+                }
+                else{
+                    joueur.intégrerEquipe(equipe2);
+                    equipe2.intégrerJoueur(joueur);
+                    listeJoueurs.add(joueur);
+                }
+            } 
+            joueurCourant = equipe1.getJoueurs().get(0);
+        }
+        //le mode par équipe est désactivé
+        else{
+            equipe1 = null;
+            equipe2 = null;
+            for(Map.Entry<String,Integer> e : mapJoueurs.entrySet()){
+                joueur = new Joueur(e.getKey());
+                listeJoueurs.add(joueur);
+            }
+            joueurCourant = listeJoueurs.get(0);
+        }   
+    }
+    
     @Override
     public Couleur getCarteCouleur(int x, int y) {
         AbstractCarte carte = getCarte(x,y);
@@ -184,14 +217,38 @@ public class Plateau extends Observable implements InterfacePlateau {
     }
     
     private void switchJoueur(){
-        int indexCourant = listeJoueurs.indexOf(joueurCourant);
-        int nbJoueurs = listeJoueurs.size();
-        
-        if(indexCourant == (nbJoueurs-1)){
-            joueurCourant = listeJoueurs.get(0);
+        Equipe equipeCourante = joueurCourant.getEquipe();
+        //si mode de jeu pas par équipe
+        if(equipeCourante == null){
+            int indexCourant = listeJoueurs.indexOf(joueurCourant);
+            int nbJoueurs = listeJoueurs.size();
+            if(indexCourant == (nbJoueurs-1)){
+                joueurCourant = listeJoueurs.get(0);
+            }
+            else{
+                joueurCourant = listeJoueurs.get(indexCourant+1);
+            }
         }
+        //mode de jeu par équipe
         else{
-            joueurCourant = listeJoueurs.get(indexCourant+1);
+            int indexCourant = equipeCourante.getJoueurs().indexOf(joueurCourant);
+            int nbJoueurs = equipeCourante.getJoueurs().size();
+            if(equipeCourante == equipe1){
+                if(indexCourant == (nbJoueurs-1)){
+                    joueurCourant = equipe2.getJoueurs().get(0);
+                }
+                else{
+                    joueurCourant = equipe2.getJoueurs().get(indexCourant+1);
+                }
+            }
+            else{
+                if(indexCourant == (nbJoueurs-1)){
+                    joueurCourant = equipe1.getJoueurs().get(0);
+                }
+                else{
+                    joueurCourant = equipe1.getJoueurs().get(indexCourant+1);
+                }       
+            }  
         }
         System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore());
     }

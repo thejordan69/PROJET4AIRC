@@ -14,6 +14,7 @@ import javax.swing.JLayeredPane;
 import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,8 +30,9 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         private JLabel carte;
         private int xAdjustment, yAdjustment, oldIndex;
         
-	public PlateauGUI(GameControler controler, Dimension boardSize) {
-            this.controler = controler;
+	public PlateauGUI(Dimension boardSize, HashMap<String,Integer> mapJoueurs) {
+            this.controler = new GameControler(mapJoueurs);
+            this.controler.addObserver((Observer) this);
             this.setTitle("Damier");
             this.setSize(boardSize);
             this.setLocationRelativeTo(null);

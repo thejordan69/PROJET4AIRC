@@ -1,19 +1,19 @@
 package controler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import model.AbstractCarte;
 import model.Coord;
 import model.Couleur;
-import model.Joueur;
 import model.Plateau;
 
 public class GameControler extends Observable implements InterfaceControler {
 	private Plateau plateau;
 	
-	public GameControler(Plateau plateau) {
-		this.plateau = plateau;
+	public GameControler(HashMap<String,Integer> mapJoueurs) {
+		this.plateau = new Plateau(mapJoueurs);
                 this.notifyObservers(plateau.getListeCartes()); 
 	}
 

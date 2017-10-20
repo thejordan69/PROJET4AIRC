@@ -6,9 +6,9 @@ public class Equipe {
     private int score;
     ArrayList<Joueur> joueurs;
     
-    public Equipe(ArrayList<Joueur> joueurs){
-        this.joueurs = joueurs;
+    public Equipe(){
         this.score = 0;
+        this.joueurs = new ArrayList<Joueur>();
     }
     
     public int getScore(){
@@ -21,5 +21,9 @@ public class Equipe {
     
     public void incrementerScore(){
         score++;
-    }    
+    }
+
+    public void intégrerJoueur(Joueur joueur){
+        joueurs.add(joueur);
+    }
 }

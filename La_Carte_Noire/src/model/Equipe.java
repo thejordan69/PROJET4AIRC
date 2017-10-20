@@ -21,5 +21,5 @@ public class Equipe {
     
     public void incrementerScore(){
         score++;
-    }
+    }    
 }

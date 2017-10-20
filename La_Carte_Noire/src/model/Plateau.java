@@ -8,7 +8,7 @@ public class Plateau extends Observable implements InterfacePlateau {
     private ArrayList<Joueur> listeJoueurs;
     private Joueur joueurCourant;
     private CarteNoire carteNoire = null;
-    private Equipe equipe1, equipe2;
+    private Equipe equipe1, equipe2, equipeCourante;
     
     public Plateau(ArrayList<Joueur> joueurs, Equipe equipe1, Equipe equipe2){
         //création de la collection de cartes du pateau

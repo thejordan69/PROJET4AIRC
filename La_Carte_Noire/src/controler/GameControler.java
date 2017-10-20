@@ -7,6 +7,7 @@ import java.util.Observer;
 import model.AbstractCarte;
 import model.Coord;
 import model.Couleur;
+import model.Joueur;
 import model.Plateau;
 
 public class GameControler extends Observable implements InterfaceControler {
@@ -34,11 +35,6 @@ public class GameControler extends Observable implements InterfaceControler {
         public Couleur getCarteCouleur(Coord coords){
             return plateau.getCarteCouleur(coords.x,coords.y);
         }
-
-       /* @Override
-        public Joueur getJoueurCourant(){		
-                    return plateau.getJoueurCourant();
-        }*/	
         
         @Override
         public ArrayList<AbstractCarte> getListeCartes(){
@@ -51,17 +47,24 @@ public class GameControler extends Observable implements InterfaceControler {
 		super.notifyObservers(arg); 
 	}
 
+        @Override
 	public void addObserver(Observer o){
 		super.addObserver(o);
 		this.notifyObservers(plateau.getListeCartes()); 
 	}
 
-    @Override
-    public boolean isEnd() {
-       return plateau.isEnd();
-    }
+        @Override
+        public boolean isEnd() {
+           return plateau.isEnd();
+        }
+
+        @Override
+        public ArrayList<Joueur> getListeJoueurs(){
+            return plateau.getListeJoueurs();
+        }
     
-    /*public ArrayList<Joueur> getListeJoueurs(){
-        return plateau.getListeJoueurs();
-    }*/
+        @Override
+        public Joueur getJoueurCourant(){		
+            return plateau.getJoueurCourant();
+        }
 }

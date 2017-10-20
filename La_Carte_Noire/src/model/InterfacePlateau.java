@@ -15,4 +15,6 @@ public interface InterfacePlateau {
         public Joueur getJoueurCourant();
         
         public ArrayList<AbstractCarte> getListeCartes();
+        
+        public ArrayList<Joueur> getListeJoueurs();
 }

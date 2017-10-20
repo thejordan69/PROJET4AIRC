@@ -22,6 +22,12 @@ public class Plateau extends Observable implements InterfacePlateau {
     private void initJoueurs(HashMap<String,Integer> mapJoueurs){
         Joueur joueur;
         
+        /*HashMap<String,Integer> mapJoueurs = new HashMap<String,Integer>();
+        mapJoueurs.put("Damien",1);
+        mapJoueurs.put("Marion",2);
+        mapJoueurs.put("Jordan",2);
+        mapJoueurs.put("Fred",1);*/
+        
         listeJoueurs = new ArrayList<Joueur>();      
         //check si le mode par équipe est activé
         if(mapJoueurs.containsValue(1)){
@@ -160,10 +166,12 @@ public class Plateau extends Observable implements InterfacePlateau {
         return null;
     }
 
+    @Override
     public Joueur getJoueurCourant(){
-        return joueurCourant;
+        return new Joueur(joueurCourant.getPseudo());
     }
     
+    @Override
     public ArrayList<Joueur> getListeJoueurs(){
         ArrayList<Joueur> listeCopie = new ArrayList();
         
@@ -207,6 +215,7 @@ public class Plateau extends Observable implements InterfacePlateau {
     }
     
     //méthode qui permet de renvoyer une copie des cartes créées
+    @Override
     public ArrayList<AbstractCarte> getListeCartes(){
         ArrayList<AbstractCarte> listeCopie = new ArrayList();
         
@@ -249,7 +258,7 @@ public class Plateau extends Observable implements InterfacePlateau {
                 }       
             }  
         }
-        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore());
+        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore() + " et un score d'équipe de " + joueurCourant.getEquipe().getScore());
     }
     
     private void miseAjourJeton(Couleur couleur){

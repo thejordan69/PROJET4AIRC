@@ -350,16 +350,9 @@ public class PseudoGUI extends JFrame {
     }
 
     private void creerPartie(){
-<<<<<<< HEAD
         HashMap<String, Integer> map = new HashMap();
     
-        
-=======
-        ArrayList<Joueur> listeJoueurs, joueursEquipe1, joueursEquipe2;
-        Equipe equipe1, equipe2;
-        Joueur joueur1, joueur2, joueur3, joueur4;
->>>>>>> master
-        
+/*
         joueur1 = new Joueur(TF_Joueur1.getText());
         joueur2 = new Joueur(TF_Joueur2.getText());
         listeJoueurs = new ArrayList<>();
@@ -385,6 +378,7 @@ public class PseudoGUI extends JFrame {
         dim = new Dimension(800,800);
         plateauGUI = new PlateauGUI(controler, dim);
         controler.addObserver((Observer) plateauGUI);
+        */
     }
 }
 

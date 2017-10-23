@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -15,8 +14,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import model.Equipe;
-import model.Joueur;
 import model.Plateau;
 
 public class PseudoGUI extends JFrame {
@@ -28,7 +25,7 @@ public class PseudoGUI extends JFrame {
     private PlateauGUI plateauGUI;
     private GameControler controler;
     private Plateau plateau;
-    private Dimension dim;
+    private Dimension dimPlateau, dimRecap;
     
     public PseudoGUI() {
         initComponents();
@@ -86,8 +83,6 @@ public class PseudoGUI extends JFrame {
         CB_Equipe2_Joueur4.setEnabled(false);
         JL_Equipe2.setEnabled(false);
         JL_Equipe1.setEnabled(false);
-        
-        
         
         //ajout des listeners aux différents composants
         TF_Joueur1.getDocument().addDocumentListener(new DocumentListener() {
@@ -351,11 +346,16 @@ public class PseudoGUI extends JFrame {
 
     private void creerPartie(){
         HashMap<String, Integer> mapJoueurs = new HashMap();
-        dim = new Dimension(800,800);
-        plateauGUI = new PlateauGUI(dim,mapJoueurs);
+        mapJoueurs.put("Damien",1);
+        mapJoueurs.put("Marion",2);
+        mapJoueurs.put("Jordan",2);
+        mapJoueurs.put("Fred",1);
+        dimPlateau = new Dimension(800,800);
+        dimRecap = new Dimension(400,800);
+        plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
         
         
-/*
+        /*
         joueur1 = new Joueur(TF_Joueur1.getText());
         joueur2 = new Joueur(TF_Joueur2.getText());
         listeJoueurs = new ArrayList<>();

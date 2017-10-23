@@ -1,8 +1,10 @@
 package view;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -25,8 +27,16 @@ public class MenuGUI extends JFrame {
         bouton_jouer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 SwingUtilities.getWindowAncestor(getContentPane()).setVisible(false);
-                PseudoGUI pseudo = new PseudoGUI();
-                pseudo.setVisible(true);
+                //PseudoGUI pseudo = new PseudoGUI();
+                //pseudo.setVisible(true);
+                HashMap<String, Integer> mapJoueurs = new HashMap();
+                mapJoueurs.put("Damien",1);
+                mapJoueurs.put("Marion",2);
+                mapJoueurs.put("Jordan",2);
+                mapJoueurs.put("Fred",1);
+                Dimension dimPlateau = new Dimension(800,800);
+                Dimension dimRecap = new Dimension(400,800);
+                PlateauGUI plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
             }
         }); 
         bouton_regles.addActionListener(new ActionListener() {

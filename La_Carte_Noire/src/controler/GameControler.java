@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-import model.AbstractCarte;
+import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
-import model.Joueur;
+import model.EquipeIHM;
+import model.JoueurIHM;
 import model.Plateau;
 
 public class GameControler extends Observable implements InterfaceControler {
@@ -15,7 +16,7 @@ public class GameControler extends Observable implements InterfaceControler {
 	
 	public GameControler(HashMap<String,Integer> mapJoueurs) {
             this.plateau = new Plateau(mapJoueurs);
-            this.notifyObservers(plateau.getListeCartes()); 
+            this.notifyObservers(); 
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class GameControler extends Observable implements InterfaceControler {
                 ret = plateau.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
             }
             
-            this.notifyObservers(plateau.getListeCartes()); 
+            this.notifyObservers(); 
             return ret;
 	}
         
@@ -37,8 +38,8 @@ public class GameControler extends Observable implements InterfaceControler {
         }
         
         @Override
-        public ArrayList<AbstractCarte> getListeCartes(){
-            return plateau.getListeCartes();
+        public ArrayList<AbstractCarteIHM> getListeCartesIHM(){
+            return plateau.getListeCartesIHM();
         }
         
         @Override
@@ -50,7 +51,7 @@ public class GameControler extends Observable implements InterfaceControler {
         @Override
 	public void addObserver(Observer o){
 		super.addObserver(o);
-		this.notifyObservers(plateau.getListeCartes()); 
+		this.notifyObservers(plateau.getListeCartesIHM()); 
 	}
 
         @Override
@@ -59,12 +60,22 @@ public class GameControler extends Observable implements InterfaceControler {
         }
 
         @Override
-        public ArrayList<Joueur> getListeJoueurs(){
-            return plateau.getListeJoueurs();
+        public ArrayList<EquipeIHM> getEquipesIHM() {
+            return plateau.getEquipesIHM();
         }
-    
+
         @Override
-        public Joueur getJoueurCourant(){		
-            return plateau.getJoueurCourant();
+        public ArrayList<JoueurIHM> getJoueursIHM() {
+            return plateau.getJoueursIHM();
         }
+
+        @Override
+        public JoueurIHM getJoueurCourantIHM() {
+            return plateau.getJoueurCourantIHM();
+        }
+
+    @Override
+    public Boolean isEquipeMode() {
+        return plateau.isEquipeMode();
+    }
 }

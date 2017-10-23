@@ -12,9 +12,13 @@ public interface InterfacePlateau {
         
         public boolean isMoveOK(int xInit, int yInit, int xFinal, int yFinal);
         
-        public Joueur getJoueurCourant();
+        public ArrayList<AbstractCarteIHM> getListeCartesIHM();
         
-        public ArrayList<AbstractCarte> getListeCartes();
+        public ArrayList<EquipeIHM> getEquipesIHM();
         
-        public ArrayList<Joueur> getListeJoueurs();
+        public ArrayList<JoueurIHM> getJoueursIHM();
+        
+        public JoueurIHM getJoueurCourantIHM();
+        
+        public Boolean isEquipeMode();
 }

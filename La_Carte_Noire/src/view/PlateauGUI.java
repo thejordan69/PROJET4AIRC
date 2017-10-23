@@ -2,6 +2,7 @@ package view;
 
 import controler.GameControler;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
@@ -15,41 +16,47 @@ import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import model.AbstractCarte;
+import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
+import model.EquipeIHM;
+import model.JoueurIHM;
 import tools.ImageProvider;
 
 public class PlateauGUI extends JFrame implements MouseListener, MouseMotionListener, Observer {
         private GameControler controler;
         private JLayeredPane layeredPane;
-        private JPanel panel;
+        private JPanel panel, recap, recapEquipe, recapJoueurs;
         private JLabel carte;
         private int xAdjustment, yAdjustment, oldIndex;
         
-	public PlateauGUI(Dimension boardSize, HashMap<String,Integer> mapJoueurs) {
+	public PlateauGUI(Dimension plateauSize, Dimension recapSize, HashMap<String,Integer> mapJoueurs) {     
             this.setTitle("Damier");
-            this.setSize(boardSize);
+            this.setSize(new Dimension(plateauSize.width+recapSize.width,plateauSize.height+recapSize.height));
             this.setLocationRelativeTo(null);
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   
+            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+            this.setLayout(new BorderLayout());
             
             layeredPane = new JLayeredPane();
-            getContentPane().add(layeredPane);
-            layeredPane.setPreferredSize(boardSize);
+            layeredPane.setPreferredSize(plateauSize);
+            getContentPane().add(layeredPane,BorderLayout.WEST);
             layeredPane.addMouseListener(this);
             layeredPane.addMouseMotionListener(this);
             
-            panel = new JPanel();
+            panel = new JPanel(new GridLayout(6,6));
             layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
-            panel.setLayout(new GridLayout(6,6));
-            panel.setPreferredSize(boardSize);
-            panel.setBounds(0, 0, boardSize.width, boardSize.height);
+            panel.setPreferredSize(new Dimension(800,800));
+            panel.setBounds(0,0,plateauSize.width,plateauSize.height);
             this.createGrid();
             this.controler = new GameControler(mapJoueurs);
-            this.controler.addObserver((Observer) this);
+            this.createRecap(recapSize,mapJoueurs);
+            this.controler.addObserver((Observer) this); 
 	}    
 	
     //méthode qui permet de créer le damier
@@ -63,6 +70,62 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         }     
         this.pack();
         this.setVisible(true);
+    }
+    
+    //méthode qui permet de créer le menu récapitulatif
+    private void createRecap(Dimension recapSize, HashMap<String,Integer> mapJoueurs){
+        int i =0;
+        
+        recap = new JPanel();
+        recap.setPreferredSize(recapSize);
+        getContentPane().add(recap,BorderLayout.EAST);
+
+        //si mode de jeu par équipe, on affiche le bandeau avec le score de chaque équipe
+        if(controler.isEquipeMode()){
+            ArrayList<EquipeIHM> equipes = controler.getEquipesIHM();
+            recapEquipe = new JPanel(new GridLayout(2,2));
+            recapEquipe.setPreferredSize(new Dimension(recapSize.width,100));
+            recapEquipe.setBorder(BorderFactory.createLineBorder(Color.black,2));
+            JLabel JLnomEquipe1 = new JLabel("EQUIPE 1",JLabel.CENTER);
+            JLnomEquipe1.setForeground(equipes.get(0).getCouleur());
+            JLnomEquipe1.setFont(JLnomEquipe1.getFont().deriveFont(25f));
+            recapEquipe.add(JLnomEquipe1);
+            JLabel JLnomEquipe2 = new JLabel("EQUIPE 2",JLabel.CENTER);
+            JLnomEquipe2.setForeground(equipes.get(1).getCouleur());
+            JLnomEquipe2.setFont(JLnomEquipe2.getFont().deriveFont(25f));
+            recapEquipe.add(JLnomEquipe2);  
+            
+            JLabel JLscoreEquipe1 = new JLabel(equipes.get(0).getScore(),JLabel.CENTER);
+            JLscoreEquipe1.setForeground(Color.red);
+            JLscoreEquipe1.setFont(JLscoreEquipe1.getFont().deriveFont(20f));
+            recapEquipe.add(JLscoreEquipe1);
+            JLabel JLscoreEquipe2 = new JLabel(equipes.get(1).getScore(),JLabel.CENTER);
+            JLscoreEquipe2.setForeground(Color.blue);
+            JLscoreEquipe2.setFont(JLscoreEquipe2.getFont().deriveFont(20f));
+            recapEquipe.add(JLscoreEquipe2);
+            recap.add(recapEquipe);
+        }
+        
+        //affichage des scores des joueurs
+        ArrayList<JoueurIHM> joueurs = controler.getJoueursIHM();
+        recapJoueurs = new JPanel(new GridLayout(joueurs.size()*2,3));
+        recapJoueurs.setPreferredSize(new Dimension(recapSize.width,recapSize.height-100));
+        for(JoueurIHM joueur : joueurs){
+            JPanel JPcurrent = new JPanel(new GridLayout(1,3));
+            JPanel JPpions = new JPanel(new GridLayout(2,4));
+            JPcurrent.add(JPpions);
+            JLabel JLscore = new JLabel(joueur.getScore(),JLabel.CENTER);
+            JLscore.setFont(JLscore.getFont().deriveFont(20f));
+            JLscore.setForeground(joueur.getEquipe().getCouleur());
+            JPcurrent.add(JLscore);
+            JLabel JLpseudo = new JLabel(joueur.getPseudo(),JLabel.CENTER);
+            JLpseudo.setFont(JLpseudo.getFont().deriveFont(20f));
+            JLpseudo.setForeground(joueur.getEquipe().getCouleur());
+            JPcurrent.add(JLpseudo);
+            recapJoueurs.add(JPcurrent);
+            i++;
+        } 
+        recap.add(recapJoueurs);
     }
                   
     @Override
@@ -158,23 +221,67 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
     }
 
     @Override public void update(Observable o, Object arg) {
-        int index;
+        int index, i = 0;
         JLabel jLabelCarte;
         JPanel pan;
+        ArrayList<AbstractCarteIHM> listeCartes;
+        HashMap<Couleur,Integer> pionsJoueur;
+        ArrayList<JoueurIHM> joueurs;
+        JoueurIHM joueurCourant;
+        ArrayList<EquipeIHM> equipes;
 
         //Efface et recrée la grille
         panel.removeAll();
         this.createGrid();
         
-        ArrayList<AbstractCarte> liste = controler.getListeCartes();
-        for(AbstractCarte tmp : liste){
+        //regénération du nouveau plateau
+        listeCartes = controler.getListeCartesIHM();
+        for(AbstractCarteIHM tmp : listeCartes){
             //si la carte n'est pas déjà gagnée
             if((tmp.getX() != -1) && (tmp.getY() != -1)){
                 index = tmp.getX()+tmp.getY()*6;
-                jLabelCarte = new JLabel(new ImageIcon(ImageProvider.getImageFile(tmp.getCouleur())));
+                jLabelCarte = new JLabel(new ImageIcon(ImageProvider.getImageFile("carte",tmp.getCouleur())));
                 pan = (JPanel) panel.getComponent(index);
                 pan.add(jLabelCarte);
             } 
+        }
+        
+        //regénération des scores des équipes
+        if(controler.isEquipeMode()){
+            equipes = controler.getEquipesIHM();
+            JLabel scoreEquipe1 = (JLabel)recapEquipe.getComponent(2);
+            scoreEquipe1.setText(equipes.get(0).getScore());
+            JLabel scoreEquipe2 = (JLabel)recapEquipe.getComponent(3);
+            scoreEquipe2.setText(equipes.get(1).getScore());  
+        }
+        
+        //regénération des scores et des pions des joueurs
+        joueurs = controler.getJoueursIHM();
+        joueurCourant = controler.getJoueurCourantIHM();
+        for(Component current : recapJoueurs.getComponents()){
+            JPanel JPcurrent = (JPanel) current;
+            JoueurIHM joueur = joueurs.get(i);
+            if(joueurCourant.getPseudo().equals(joueur.getPseudo())){
+                JPcurrent.setBorder(BorderFactory.createLineBorder(Color.green,2));
+            }
+            else{
+                JPcurrent.setBorder(BorderFactory.createEmptyBorder());
+            }
+            JLabel JLscore = (JLabel) JPcurrent.getComponent(1);
+            JLscore.setText(joueur.getScore());
+
+            pionsJoueur = joueur.getNombreJetons();
+            JPanel JPpion = (JPanel) JPcurrent.getComponent(0);
+            
+            JPpion.removeAll();
+            for(Map.Entry<Couleur,Integer> e : pionsJoueur.entrySet()){
+                if(e.getValue() == 1){                
+                    JLabel pion = new JLabel(new ImageIcon(ImageProvider.getImageFile("pion",e.getKey())),JLabel.LEFT);
+                    JPpion.add(pion);
+                    this.repaint();
+                } 
+            }
+            i++;
         }
     }
 }

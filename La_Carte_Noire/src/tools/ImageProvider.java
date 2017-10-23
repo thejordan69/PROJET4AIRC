@@ -1,8 +1,6 @@
 package tools;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import model.Couleur;
 
 public class ImageProvider {
@@ -19,10 +17,16 @@ public class ImageProvider {
 	 * @param pieceCouleur
 	 * @return nom fichier contenant image de la pi�ce
 	 */
-	public static String getImageFile(Couleur couleur){
+	public static String getImageFile(String type, Couleur couleur){
 		String ret = null;
 		File g=new File("");
-		ret = g.getAbsolutePath()+"/src/images/" + couleur + ".png";
+                if(type.equals("carte")){
+                    ret = g.getAbsolutePath()+"/src/images/carte-" + couleur + ".png";
+                }
+                else if(type.equals("pion")){
+                    ret = g.getAbsolutePath()+"/src/images/pion-" + couleur + ".png";
+                }
+		
 		return ret;		
 	}
 }

@@ -1,22 +1,27 @@
 package controler;
 
 import java.util.ArrayList;
-import model.AbstractCarte;
+import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
-import model.Joueur;
+import model.EquipeIHM;
+import model.JoueurIHM;
 
 public interface InterfaceControler {
 
 	public boolean move(Coord initCoord, Coord finalCoord);
         
-        public ArrayList<AbstractCarte> getListeCartes();
-        
         public Couleur getCarteCouleur(Coord coords);
         
         public boolean isEnd();
         
-        public ArrayList<Joueur> getListeJoueurs();
+        public ArrayList<AbstractCarteIHM> getListeCartesIHM();
         
-        public Joueur getJoueurCourant();   
+        public ArrayList<EquipeIHM> getEquipesIHM();
+        
+        public ArrayList<JoueurIHM> getJoueursIHM();
+        
+        public JoueurIHM getJoueurCourantIHM();
+        
+        public Boolean isEquipeMode();
 }

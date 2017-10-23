@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,17 +23,11 @@ public class Plateau extends Observable implements InterfacePlateau {
     private void initJoueurs(HashMap<String,Integer> mapJoueurs){
         Joueur joueur;
         
-        /*HashMap<String,Integer> mapJoueurs = new HashMap<String,Integer>();
-        mapJoueurs.put("Damien",1);
-        mapJoueurs.put("Marion",2);
-        mapJoueurs.put("Jordan",2);
-        mapJoueurs.put("Fred",1);*/
-        
         listeJoueurs = new ArrayList<Joueur>();      
         //check si le mode par équipe est activé
         if(mapJoueurs.containsValue(1)){
-            equipe1 = new Equipe();
-            equipe2 = new Equipe();
+            equipe1 = new Equipe(Color.RED);
+            equipe2 = new Equipe(Color.BLUE);
             for(Map.Entry<String,Integer> e : mapJoueurs.entrySet()){
                 joueur = new Joueur(e.getKey());
                 if(e.getValue() == 1){
@@ -47,6 +42,7 @@ public class Plateau extends Observable implements InterfacePlateau {
                 }
             } 
             joueurCourant = equipe1.getJoueurs().get(0);
+            System.out.println(joueurCourant.getPseudo());
         }
         //le mode par équipe est désactivé
         else{
@@ -107,7 +103,7 @@ public class Plateau extends Observable implements InterfacePlateau {
     private void gagnerCarte(Carte carte){
         joueurCourant.incrémenterCarte(carte.getCouleur());
         joueurCourant.incrémenterScores();
-        miseAjourJeton(carte.getCouleur());
+        miseAjourPion(carte.getCouleur());
         carte.eliminer();
     }
     
@@ -165,22 +161,6 @@ public class Plateau extends Observable implements InterfacePlateau {
         }
         return null;
     }
-
-    @Override
-    public Joueur getJoueurCourant(){
-        return new Joueur(joueurCourant.getPseudo());
-    }
-    
-    @Override
-    public ArrayList<Joueur> getListeJoueurs(){
-        ArrayList<Joueur> listeCopie = new ArrayList();
-        
-        for(Joueur tmp : listeJoueurs){
-            listeCopie.add((Joueur) tmp);
-        }
-        
-        return listeCopie;
-    }
     
     //méthode qui permet de renvoyer la liste des cartes qui vont être placées sur le damier
     private ArrayList<AbstractCarte> creerListeCartes(){        
@@ -216,11 +196,11 @@ public class Plateau extends Observable implements InterfacePlateau {
     
     //méthode qui permet de renvoyer une copie des cartes créées
     @Override
-    public ArrayList<AbstractCarte> getListeCartes(){
-        ArrayList<AbstractCarte> listeCopie = new ArrayList();
+    public ArrayList<AbstractCarteIHM> getListeCartesIHM(){
+        ArrayList<AbstractCarteIHM> listeCopie = new ArrayList<AbstractCarteIHM>();
         
         for(AbstractCarte carte : listeCartes){
-            listeCopie.add(carte);
+            listeCopie.add(new AbstractCarteIHM(carte));
         }
         
         return listeCopie;
@@ -261,7 +241,7 @@ public class Plateau extends Observable implements InterfacePlateau {
         System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore() + " et un score d'équipe de " + joueurCourant.getEquipe().getScore());
     }
     
-    private void miseAjourJeton(Couleur couleur){
+    private void miseAjourPion(Couleur couleur){
         int max = 0;
         Joueur meilleur = null;
         
@@ -286,6 +266,44 @@ public class Plateau extends Observable implements InterfacePlateau {
         else{
             joueurCourant.gagnerJeton(couleur);
             System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
+        }
+    }
+
+    @Override
+    public ArrayList<EquipeIHM> getEquipesIHM() {
+        ArrayList<EquipeIHM> equipes = null;
+        
+        if(equipe1 != null){
+            equipes = new ArrayList<EquipeIHM>();
+            equipes.add(new EquipeIHM(equipe1));
+            equipes.add(new EquipeIHM(equipe2)); 
+        }
+        
+        return equipes;
+    }
+
+    @Override
+    public ArrayList<JoueurIHM> getJoueursIHM() {
+        ArrayList<JoueurIHM> joueurs = new ArrayList<JoueurIHM>();
+        for(Joueur tmp : listeJoueurs){
+            joueurs.add(new JoueurIHM(tmp));
+        }
+        
+        return joueurs;
+    }
+
+    @Override
+    public JoueurIHM getJoueurCourantIHM() {
+        return new JoueurIHM(joueurCourant);
+    }
+
+    @Override
+    public Boolean isEquipeMode() {
+        if(equipe1 != null){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

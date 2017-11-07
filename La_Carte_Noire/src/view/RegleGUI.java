@@ -19,9 +19,9 @@ import javax.swing.SwingUtilities;
  *
  * @author Frederic
  */
-public class ReglesGUI extends JFrame{
+public class RegleGUI extends JFrame{
     
-    public ReglesGUI(){
+    public RegleGUI(){
         //création de la JFrame
         this.setTitle("La Carte Noire - Règles du jeu");
         this.setSize(500, 500);

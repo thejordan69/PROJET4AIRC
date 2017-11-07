@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class MenuGUI extends JFrame {
+    private PlateauGUI plateauGUI;
+    private RegleGUI regleGUI;
     
     public MenuGUI(){
         //création de la JFrame
@@ -27,8 +29,6 @@ public class MenuGUI extends JFrame {
         bouton_jouer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 SwingUtilities.getWindowAncestor(getContentPane()).setVisible(false);
-                //PseudoGUI pseudo = new PseudoGUI();
-                //pseudo.setVisible(true);
                 HashMap<String, Integer> mapJoueurs = new HashMap();
                 mapJoueurs.put("Damien",1);
                 mapJoueurs.put("Marion",2);
@@ -36,14 +36,14 @@ public class MenuGUI extends JFrame {
                 mapJoueurs.put("Fred",1);
                 Dimension dimPlateau = new Dimension(800,800);
                 Dimension dimRecap = new Dimension(400,800);
-                PlateauGUI plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
+                plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
             }
         }); 
         bouton_regles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 SwingUtilities.getWindowAncestor(getContentPane()).setVisible(false);
-                ReglesGUI regle = new ReglesGUI();
-                regle.setVisible(true);
+                regleGUI = new RegleGUI();
+                regleGUI.setVisible(true);
             }
         }); 
         //ajout des boutons à la JFrame

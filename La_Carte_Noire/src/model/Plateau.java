@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
-public class Plateau extends Observable implements InterfacePlateau {
+public class Plateau implements InterfacePlateau {
     private ArrayList<AbstractCarte> listeCartes;
     private ArrayList<Joueur> listeJoueurs;
     private Joueur joueurCourant;

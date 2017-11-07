@@ -14,10 +14,10 @@ public abstract class AbstractCarte {
     }
     
     public int getX(){
-        return this.coordonnees.x;
+        return this.coordonnees.getX();
     }   
     
     public int getY(){
-        return this.coordonnees.y;
+        return this.coordonnees.getY();
     }   
 }

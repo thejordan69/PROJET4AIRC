@@ -7,7 +7,7 @@ public class Carte extends AbstractCarte {
     }
 
     public void eliminer(){
-        this.coordonnees.x = -1;
-        this.coordonnees.y = -1;
+        this.coordonnees.setX(-1);
+        this.coordonnees.setY(-1);
     }
 }

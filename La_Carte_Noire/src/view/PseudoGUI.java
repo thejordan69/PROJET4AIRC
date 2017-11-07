@@ -1,6 +1,5 @@
 package view;
 
-import controler.GameControler;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import model.Plateau;
 
 public class PseudoGUI extends JFrame {
     private JTextField TF_Joueur1, TF_Joueur2, TF_Joueur3, TF_Joueur4 ;
@@ -23,8 +21,6 @@ public class PseudoGUI extends JFrame {
     private JLabel JL_Joueur1, JL_Joueur2, JL_Joueur3, JL_Joueur4, JL_Select_Equipe, JL_Equipe2, JL_Equipe1;
     private JSeparator jSeparator3;
     private PlateauGUI plateauGUI;
-    private GameControler controler;
-    private Plateau plateau;
     private Dimension dimPlateau, dimRecap;
     
     public PseudoGUI() {
@@ -282,7 +278,7 @@ public class PseudoGUI extends JFrame {
         pseudo.add(TF_Joueur3.getText());
         pseudo.add(TF_Joueur4.getText());
         
-        nbJoueur = CheckNbJoueur(pseudo);
+        nbJoueur = checkNbJoueur(pseudo);
         
         for(String tmp : pseudo){
            if(!tmp.equals("") && Collections.frequency(pseudo,tmp) == 1){
@@ -335,7 +331,7 @@ public class PseudoGUI extends JFrame {
         }
         }
 
-    private int CheckNbJoueur(ArrayList<String> pseudo){
+    private int checkNbJoueur(ArrayList<String> pseudo){
         int i, count=0;
         for (i=0; i<4; i++){
             if (!pseudo.get(i).equals(""))

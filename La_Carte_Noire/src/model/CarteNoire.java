@@ -14,8 +14,8 @@ public class CarteNoire extends AbstractCarte {
     }    
     
     public boolean move(int xFinal, int yFinal){
-        this.coordonnees.x = xFinal;
-        this.coordonnees.y = yFinal;
+        this.coordonnees.setX(xFinal);
+        this.coordonnees.setY(yFinal);
         return true;
     }
 }

@@ -1,5 +1,6 @@
  package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Joueur {
@@ -7,13 +8,13 @@ public class Joueur {
     private int score;
     private Equipe equipe;
     private HashMap<Couleur,Integer> nombreCartes;
-    private HashMap<Couleur,Integer> nombreJetons;
+    private ArrayList<Jeton> listeJetons;
     
     public Joueur(String pseudo){
         this.pseudo = pseudo;
         this.score = 0;
         this.nombreCartes = new HashMap<Couleur,Integer>();
-        this.nombreJetons = new HashMap<Couleur,Integer>();
+        this.listeJetons = new ArrayList<Jeton>();
         nombreCartes.put(Couleur.bleue,0);
         nombreCartes.put(Couleur.cyan,0);
         nombreCartes.put(Couleur.jaune,0);
@@ -21,13 +22,6 @@ public class Joueur {
         nombreCartes.put(Couleur.rose,0);
         nombreCartes.put(Couleur.rouge,0);
         nombreCartes.put(Couleur.verte,0);
-        nombreJetons.put(Couleur.bleue,0);
-        nombreJetons.put(Couleur.cyan,0);
-        nombreJetons.put(Couleur.jaune,0);
-        nombreJetons.put(Couleur.orange,0);
-        nombreJetons.put(Couleur.rose,0);
-        nombreJetons.put(Couleur.rouge,0);
-        nombreJetons.put(Couleur.verte,0);
     }
 
     public String getPseudo() {
@@ -46,8 +40,8 @@ public class Joueur {
         return nombreCartes;
     }
     
-    public HashMap<Couleur, Integer> getNombreJetons() {
-        return nombreJetons;
+    public ArrayList<Jeton> getListeJetons() {
+        return listeJetons;
     }
     
     public void incrémenterCarte(Couleur couleur){
@@ -61,12 +55,12 @@ public class Joueur {
         }
     }
     
-    public void gagnerJeton(Couleur couleur){
-        nombreJetons.replace(couleur,1);
+    public void gagnerJeton(Jeton jeton){
+        listeJetons.add(jeton);
     }
     
-    public void perdreJeton(Couleur couleur){
-        nombreJetons.replace(couleur,0);
+    public void perdreJeton(Jeton jeton){
+        listeJetons.remove(jeton);
     }
     
     public void intégrerEquipe(Equipe equipe){

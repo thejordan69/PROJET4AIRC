@@ -30,6 +30,7 @@ import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
 import model.EquipeIHM;
+import model.Jeton;
 import model.JoueurIHM;
 import tools.ImageProvider;
 
@@ -246,7 +247,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         JLabel jLabelCarte;
         JPanel pan;
         ArrayList<AbstractCarteIHM> listeCartes;
-        HashMap<Couleur,Integer> pionsJoueur;
+        ArrayList<Jeton> jetonsJoueur;
         ArrayList<JoueurIHM> joueurs;
         JoueurIHM joueurCourant;
         ArrayList<EquipeIHM> equipes;
@@ -291,22 +292,20 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             JLabel JLscore = (JLabel) JPcurrent.getComponent(1);
             JLscore.setText(joueur.getScore());
 
-            pionsJoueur = joueur.getNombreJetons();
+            jetonsJoueur = joueur.getListeJetons();
             JPanel JPpion = (JPanel) JPcurrent.getComponent(0);
             
             JPpion.removeAll();
-            for(Map.Entry<Couleur,Integer> e : pionsJoueur.entrySet()){
-                if(e.getValue() == 1){                
-                    JLabel pion = new JLabel(new ImageIcon(ImageProvider.getImageFile("pion",e.getKey())),JLabel.LEFT);
-                    JPpion.add(pion);
-                    this.repaint();
-                } 
+            for(Jeton tmp : jetonsJoueur){    
+                JLabel pion = new JLabel(new ImageIcon(ImageProvider.getImageFile("pion",tmp.getCouleur())),JLabel.LEFT);
+                JPpion.add(pion);
+                this.repaint();
             }
             i++;
         }
         
         //si c'est la fin de la partie, on arrête la partie et on affiche le gagnant
-        if(!controler.isEnd()){
+        if(controler.isEnd()){
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);
             winerFrame.setUndecorated(true);

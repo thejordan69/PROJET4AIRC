@@ -8,6 +8,7 @@ import java.util.Map;
 public class Plateau implements InterfacePlateau {
     private ArrayList<AbstractCarte> listeCartes;
     private ArrayList<Joueur> listeJoueurs;
+    private HashMap<Couleur,Jeton> listeJetons;
     private Joueur joueurCourant;
     private CarteNoire carteNoire = null;
     private Equipe equipe1, equipe2;
@@ -15,9 +16,22 @@ public class Plateau implements InterfacePlateau {
     public Plateau(HashMap<String,Integer> mapJoueurs){
         //création de la collection de cartes du pateau
         this.listeCartes = creerListeCartes();
+        initJetons();
         initJoueurs(mapJoueurs);
     } 
 
+    //méthode qui permet d'initialiser les jetons
+    private void initJetons(){
+        listeJetons = new HashMap<Couleur,Jeton>();
+        listeJetons.put(Couleur.bleue,new Jeton(Couleur.bleue,8));
+        listeJetons.put(Couleur.verte,new Jeton(Couleur.verte,7));
+        listeJetons.put(Couleur.rouge,new Jeton(Couleur.rouge,6));
+        listeJetons.put(Couleur.rose,new Jeton(Couleur.rose,5));
+        listeJetons.put(Couleur.jaune,new Jeton(Couleur.jaune,4));
+        listeJetons.put(Couleur.cyan,new Jeton(Couleur.cyan,3));
+        listeJetons.put(Couleur.orange,new Jeton(Couleur.orange,2));
+    }
+    
     //méthode qui permet d'initialiser les joueurs ainsi que leur potentielle équipe
     private void initJoueurs(HashMap<String,Integer> mapJoueurs){
         Joueur joueur;
@@ -246,7 +260,8 @@ public class Plateau implements InterfacePlateau {
         
         for(Joueur tmp : listeJoueurs){
             //récupère le joueur ayant le jeton de la couleur spécifiée ainsi que son nombre de carte pour cette couleur
-            if((tmp.getNombreJetons().get(couleur) == 1) && !(tmp.getPseudo().equals(joueurCourant.getPseudo()))){
+            if((tmp.getListeJetons().contains(listeJetons.get(couleur))) && !(tmp.getPseudo().equals(joueurCourant.getPseudo()))){
+                System.out.println(tmp.getPseudo() + " a été choisi");
                 meilleur = tmp;
                 max = tmp.getNombreCartes().get(couleur);
             }
@@ -255,15 +270,15 @@ public class Plateau implements InterfacePlateau {
         if(meilleur != null){
             //si le joueur courant a plus de carte que le meilleur actuel
             if(joueurCourant.getNombreCartes().get(couleur) >= max){
-                joueurCourant.gagnerJeton(couleur);
-                meilleur.perdreJeton(couleur);
+                joueurCourant.gagnerJeton(listeJetons.get(couleur));
+                meilleur.perdreJeton(listeJetons.get(couleur));
                 meilleur = null;
                 System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
             }
         }
         //sinon c'est le premier joueur à gagner le jeton
-        else{
-            joueurCourant.gagnerJeton(couleur);
+        else if ((meilleur == null) && !(joueurCourant.getListeJetons().contains(listeJetons.get(couleur)))){
+            joueurCourant.gagnerJeton(listeJetons.get(couleur));
             System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
         }
     }

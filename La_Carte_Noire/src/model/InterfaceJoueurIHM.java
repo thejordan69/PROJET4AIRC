@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface InterfaceJoueurIHM {
@@ -10,7 +11,7 @@ public interface InterfaceJoueurIHM {
     
     public Equipe getEquipe(); 
     
-    public HashMap<Couleur, Integer> getNombreJetons();
+    public ArrayList<Jeton> getListeJetons();
     
     public HashMap<Couleur, Integer> getNombreCartes();
 }

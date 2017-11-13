@@ -3,11 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/C:/Users/jcouston/Documents/NetBeansProjects/PROJET4AIRC/PROJET4AIRC/La_Carte_Noire/src/model/Joueur.java</file>
             <file>file:/C:/Users/jcouston/Documents/NetBeansProjects/PROJET4AIRC/PROJET4AIRC/La_Carte_Noire/src/view/PseudoGUI.java</file>
             <file>file:/C:/Users/jcouston/Documents/NetBeansProjects/PROJET4AIRC/PROJET4AIRC/La_Carte_Noire/src/model/Plateau.java</file>
             <file>file:/C:/Users/jcouston/Documents/NetBeansProjects/PROJET4AIRC/PROJET4AIRC/La_Carte_Noire/src/launcher/LauncherGUI.java</file>
             <file>file:/C:/Users/jcouston/Documents/NetBeansProjects/PROJET4AIRC/PROJET4AIRC/La_Carte_Noire/src/view/MenuGUI.java</file>
+=======
+            <file>file:/C:/Users/DAMS/Documents/NetBeansProjects/PROJET4AIRC/La_Carte_Noire/src/view/PseudoGUI.java</file>
+            <file>file:/C:/Users/DAMS/Documents/NetBeansProjects/PROJET4AIRC/La_Carte_Noire/src/view/PlateauGUI.java</file>
+            <file>file:/C:/Users/DAMS/Documents/NetBeansProjects/PROJET4AIRC/La_Carte_Noire/src/controler/GameControler.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

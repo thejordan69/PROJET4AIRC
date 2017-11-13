@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JoueurIHM implements InterfaceJoueurIHM {
@@ -25,8 +26,8 @@ public class JoueurIHM implements InterfaceJoueurIHM {
     }
 
     @Override
-    public HashMap<Couleur, Integer> getNombreJetons() {
-        return joueur.getNombreJetons();
+    public ArrayList<Jeton> getListeJetons() {
+        return joueur.getListeJetons();
     }
 
     @Override

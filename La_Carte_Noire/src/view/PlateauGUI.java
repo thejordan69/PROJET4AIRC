@@ -127,11 +127,21 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             JPcurrent.add(JPpions);
             JLabel JLscore = new JLabel(joueur.getScore(),JLabel.CENTER);
             JLscore.setFont(JLscore.getFont().deriveFont(20f));
-            JLscore.setForeground(joueur.getEquipe().getCouleur());
+            if(joueur.getEquipe() != null){
+                JLscore.setForeground(joueur.getEquipe().getCouleur());
+            }
+            else{
+                JLscore.setForeground(Color.BLACK);
+            }
             JPcurrent.add(JLscore);
             JLabel JLpseudo = new JLabel(joueur.getPseudo(),JLabel.CENTER);
             JLpseudo.setFont(JLpseudo.getFont().deriveFont(20f));
-            JLpseudo.setForeground(joueur.getEquipe().getCouleur());
+            if(joueur.getEquipe() != null){
+                JLpseudo.setForeground(joueur.getEquipe().getCouleur());
+            }
+            else{
+                JLpseudo.setForeground(Color.BLACK);
+            }
             JPcurrent.add(JLpseudo);
             recapJoueurs.add(JPcurrent);
             i++;

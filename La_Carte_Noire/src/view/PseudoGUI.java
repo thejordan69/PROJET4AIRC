@@ -339,16 +339,38 @@ public class PseudoGUI extends JFrame {
         }
         return count;
     }
-
     private void creerPartie(){
         HashMap<String, Integer> mapJoueurs = new HashMap();
-        mapJoueurs.put("Damien",1);
+        ArrayList<String> pseudo = new ArrayList<String>();
+        pseudo.add(TF_Joueur1.getText());
+        pseudo.add(TF_Joueur2.getText());
+        pseudo.add(TF_Joueur3.getText());
+        pseudo.add(TF_Joueur4.getText());
+        if (checkNbJoueur(pseudo) == 2 )
+        {
+            mapJoueurs.put(TF_Joueur1.getText(),0);
+            mapJoueurs.put(TF_Joueur2.getText(),0);
+        }  
+        else {if (checkNbJoueur(pseudo) == 3 ){
+            mapJoueurs.put(TF_Joueur1.getText(),0);
+            mapJoueurs.put(TF_Joueur2.getText(),0);
+            mapJoueurs.put(TF_Joueur3.getText(),0);
+        }else {if (checkNbJoueur(pseudo) == 4 ){
+            mapJoueurs.put(TF_Joueur1.getText(),0);
+            mapJoueurs.put(TF_Joueur2.getText(),0);
+            mapJoueurs.put(TF_Joueur3.getText(),0);
+            mapJoueurs.put(TF_Joueur4.getText(),0);
+        }}}
+            
+       /* mapJoueurs.put("Damien",1);
         mapJoueurs.put("Marion",2);
         mapJoueurs.put("Jordan",2);
-        mapJoueurs.put("Fred",1);
+        mapJoueurs.put("Fred",1);*/
         dimPlateau = new Dimension(800,800);
         dimRecap = new Dimension(400,800);
         plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
+        
+        
         
         
         /*

@@ -78,4 +78,9 @@ public class GameControler extends Observable implements InterfaceControler {
     public Boolean isEquipeMode() {
         return plateau.isEquipeMode();
     }
+
+    @Override
+    public String getGagnant() {
+        return plateau.getGagnant();
+    }
 }

@@ -333,12 +333,16 @@ public class PseudoGUI extends JFrame {
 
     private int checkNbJoueur(ArrayList<String> pseudo){
         int i, count=0;
-        for (i=0; i<4; i++){
-            if (!pseudo.get(i).equals(""))
+        
+        for(String tmp : pseudo){
+            if(!tmp.equals("")){
                 count = count + 1;
+            }
         }
+            
         return count;
     }
+    
     private void creerPartie(){
         HashMap<String, Integer> mapJoueurs = new HashMap();
         ArrayList<String> pseudo = new ArrayList<String>();
@@ -346,60 +350,19 @@ public class PseudoGUI extends JFrame {
         pseudo.add(TF_Joueur2.getText());
         pseudo.add(TF_Joueur3.getText());
         pseudo.add(TF_Joueur4.getText());
-        if (checkNbJoueur(pseudo) == 2 )
-        {
-            mapJoueurs.put(TF_Joueur1.getText(),0);
-            mapJoueurs.put(TF_Joueur2.getText(),0);
-        }  
-        else {if (checkNbJoueur(pseudo) == 3 ){
-            mapJoueurs.put(TF_Joueur1.getText(),0);
-            mapJoueurs.put(TF_Joueur2.getText(),0);
+        
+        mapJoueurs.put(TF_Joueur1.getText(),1);
+        mapJoueurs.put(TF_Joueur2.getText(),2);
+        
+        if(checkNbJoueur(pseudo) == 3){
             mapJoueurs.put(TF_Joueur3.getText(),0);
-        }else {if (checkNbJoueur(pseudo) == 4 ){
-            mapJoueurs.put(TF_Joueur1.getText(),0);
-            mapJoueurs.put(TF_Joueur2.getText(),0);
-            mapJoueurs.put(TF_Joueur3.getText(),0);
+        }
+        if(checkNbJoueur(pseudo) == 4){
             mapJoueurs.put(TF_Joueur4.getText(),0);
-        }}}
-            
-       /* mapJoueurs.put("Damien",1);
-        mapJoueurs.put("Marion",2);
-        mapJoueurs.put("Jordan",2);
-        mapJoueurs.put("Fred",1);*/
+        }
+         
         dimPlateau = new Dimension(800,800);
         dimRecap = new Dimension(400,800);
-        plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
-        
-        
-        
-        
-        /*
-        joueur1 = new Joueur(TF_Joueur1.getText());
-        joueur2 = new Joueur(TF_Joueur2.getText());
-        listeJoueurs = new ArrayList<>();
-        listeJoueurs.add(joueur1);
-        listeJoueurs.add(joueur2);
-        if(!TF_Joueur3.getText().equals("")){
-            joueur3 = new Joueur(TF_Joueur3.getText());
-            listeJoueurs.add(joueur3);
-        }
-        if(!TF_Joueur4.getText().equals("")){
-            joueur4 = new Joueur(TF_Joueur3.getText());
-            listeJoueurs.add(joueur4);
-        }
-
-        joueursEquipe1 = new ArrayList<>();
-        joueursEquipe1.add(joueur1);
-        joueursEquipe1.add(joueur3);
-        joueursEquipe2 = new ArrayList<>();
-        joueursEquipe2.add(joueur2);
-        joueursEquipe2.add(joueur4);
-        plateau = new Plateau(listeJoueurs);
-        controler = new GameControler(plateau);
-        dim = new Dimension(800,800);
-        plateauGUI = new PlateauGUI(controler, dim);
-        controler.addObserver((Observer) plateauGUI);
-        */
+        plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs); 
     }
 }
-

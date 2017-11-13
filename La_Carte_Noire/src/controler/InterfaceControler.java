@@ -24,4 +24,6 @@ public interface InterfaceControler {
         public JoueurIHM getJoueurCourantIHM();
         
         public Boolean isEquipeMode();
+        
+        public String getGagnant();
 }

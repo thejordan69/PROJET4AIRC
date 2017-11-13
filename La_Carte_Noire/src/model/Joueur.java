@@ -13,6 +13,7 @@ public class Joueur {
     public Joueur(String pseudo){
         this.pseudo = pseudo;
         this.score = 0;
+        this.equipe = null;
         this.nombreCartes = new HashMap<Couleur,Integer>();
         this.listeJetons = new ArrayList<Jeton>();
         nombreCartes.put(Couleur.bleue,0);
@@ -46,21 +47,21 @@ public class Joueur {
     
     public void incrémenterCarte(Couleur couleur){
         nombreCartes.replace(couleur, ((Integer) nombreCartes.get(couleur))+1);
-    }
-    
-    public void incrémenterScores(){
         score++;
-        if(this.getEquipe() != null){
-            this.getEquipe().incrementerScore();
-        }
     }
     
     public void gagnerJeton(Jeton jeton){
         listeJetons.add(jeton);
+        if(this.getEquipe() != null){
+            this.getEquipe().gagnerJeton();
+        }
     }
     
     public void perdreJeton(Jeton jeton){
         listeJetons.remove(jeton);
+        if(this.getEquipe() != null){
+            this.getEquipe().perdreJeton();
+        }
     }
     
     public void intégrerEquipe(Equipe equipe){

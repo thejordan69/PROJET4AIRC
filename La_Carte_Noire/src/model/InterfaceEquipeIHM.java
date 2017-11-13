@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public interface InterfaceEquipeIHM {
     
-    public String getScore();
+    public String getNbJetons();
     
     public Color getCouleur();
     

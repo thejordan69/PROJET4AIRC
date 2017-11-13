@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -107,11 +106,11 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             JLnomEquipe2.setFont(JLnomEquipe2.getFont().deriveFont(25f));
             recapEquipe.add(JLnomEquipe2);  
             
-            JLabel JLscoreEquipe1 = new JLabel(equipes.get(0).getScore(),JLabel.CENTER);
+            JLabel JLscoreEquipe1 = new JLabel(equipes.get(0).getNbJetons(),JLabel.CENTER);
             JLscoreEquipe1.setForeground(Color.red);
             JLscoreEquipe1.setFont(JLscoreEquipe1.getFont().deriveFont(20f));
             recapEquipe.add(JLscoreEquipe1);
-            JLabel JLscoreEquipe2 = new JLabel(equipes.get(1).getScore(),JLabel.CENTER);
+            JLabel JLscoreEquipe2 = new JLabel(equipes.get(1).getNbJetons(),JLabel.CENTER);
             JLscoreEquipe2.setForeground(Color.blue);
             JLscoreEquipe2.setFont(JLscoreEquipe2.getFont().deriveFont(20f));
             recapEquipe.add(JLscoreEquipe2);
@@ -272,9 +271,9 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         if(controler.isEquipeMode()){
             equipes = controler.getEquipesIHM();
             JLabel scoreEquipe1 = (JLabel)recapEquipe.getComponent(2);
-            scoreEquipe1.setText(equipes.get(0).getScore());
+            scoreEquipe1.setText(equipes.get(0).getNbJetons());
             JLabel scoreEquipe2 = (JLabel)recapEquipe.getComponent(3);
-            scoreEquipe2.setText(equipes.get(1).getScore());  
+            scoreEquipe2.setText(equipes.get(1).getNbJetons());  
         }
         
         //regénération des scores et des pions des joueurs
@@ -305,7 +304,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         }
         
         //si c'est la fin de la partie, on arrête la partie et on affiche le gagnant
-        if(controler.isEnd()){
+        if(!controler.isEnd()){
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);
             winerFrame.setUndecorated(true);
@@ -330,6 +329,9 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
                     SwingUtilities.getWindowAncestor(getContentPane()).dispose();
                 }
             }); 
+            JLabel gagnant = new JLabel("Le gagnant est :" + controler.getGagnant());
+            gagnant.setFont(gagnant.getFont().deriveFont(30f));
+            winerFrame.add(gagnant,BorderLayout.CENTER);
             winerFrame.setVisible(true);
         }
     }

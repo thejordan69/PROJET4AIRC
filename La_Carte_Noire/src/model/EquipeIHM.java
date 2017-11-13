@@ -11,8 +11,8 @@ public class EquipeIHM implements InterfaceEquipeIHM {
     } 
 
     @Override
-    public String getScore() {
-        return String.valueOf(equipe.getScore());
+    public String getNbJetons() {
+        return String.valueOf(equipe.getNbJetons());
     }
 
     @Override

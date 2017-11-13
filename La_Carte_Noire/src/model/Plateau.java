@@ -55,7 +55,6 @@ public class Plateau implements InterfacePlateau {
                 }
             } 
             joueurCourant = equipe1.getJoueurs().get(0);
-            System.out.println(joueurCourant.getPseudo());
         }
         //le mode par équipe est désactivé
         else{
@@ -115,7 +114,6 @@ public class Plateau implements InterfacePlateau {
     //méthode qui est appellé lors d'un gain d'une carte
     private void gagnerCarte(Carte carte){
         joueurCourant.incrémenterCarte(carte.getCouleur());
-        joueurCourant.incrémenterScores();
         miseAjourPion(carte.getCouleur());
         carte.eliminer();
     }
@@ -251,7 +249,7 @@ public class Plateau implements InterfacePlateau {
                 }       
             }  
         }
-        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore() + " et un score d'équipe de " + joueurCourant.getEquipe().getScore());
+        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore());
     }
     
     private void miseAjourPion(Couleur couleur){
@@ -261,7 +259,6 @@ public class Plateau implements InterfacePlateau {
         for(Joueur tmp : listeJoueurs){
             //récupère le joueur ayant le jeton de la couleur spécifiée ainsi que son nombre de carte pour cette couleur
             if((tmp.getListeJetons().contains(listeJetons.get(couleur))) && !(tmp.getPseudo().equals(joueurCourant.getPseudo()))){
-                System.out.println(tmp.getPseudo() + " a été choisi");
                 meilleur = tmp;
                 max = tmp.getNombreCartes().get(couleur);
             }
@@ -318,6 +315,31 @@ public class Plateau implements InterfacePlateau {
         }
         else{
             return false;
+        }
+    }
+
+    @Override
+    public String getGagnant() {
+        if(isEquipeMode()){
+            if(equipe1.getNbJetons() > equipe2.getNbJetons()){
+                return "Equipe 1";
+            }
+            else if(equipe1.getNbJetons() < equipe2.getNbJetons()){
+                return "Equipe 2";
+            }
+            else{
+                return "Egalité";
+            }
+        }
+        else{
+            int nb, max = 0;
+            Joueur meilleur;
+            
+            /*for(Joueur tmp : listeJoueurs){
+                nb = tmp.getListeJetons().size();
+                
+            }*/
+            return "Damien";
         }
     }
 }

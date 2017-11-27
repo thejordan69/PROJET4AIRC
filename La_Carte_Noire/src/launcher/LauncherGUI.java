@@ -6,6 +6,7 @@ public class LauncherGUI {
     private static MenuGUI menu;
     
     public static void main(String[] args) {
-        menu = new MenuGUI();           
+        //menu = new MenuGUI(); 
+         new MenuGUI().setVisible(true);
     }
 }

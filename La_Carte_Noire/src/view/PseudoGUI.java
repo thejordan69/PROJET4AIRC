@@ -5,10 +5,12 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -16,12 +18,13 @@ import javax.swing.event.DocumentListener;
 
 public class PseudoGUI extends JFrame {
     private JTextField TF_Joueur1, TF_Joueur2, TF_Joueur3, TF_Joueur4 ;
-    private JCheckBox CB_Equipe, CB_Equipe1_Joueur1, CB_Equipe1_Joueur2, CB_Equipe1_Joueur3, CB_Equipe1_Joueur4,CB_Equipe2_Joueur1, CB_Equipe2_Joueur2, CB_Equipe2_Joueur3, CB_Equipe2_Joueur4;
+    private JRadioButton CB_Equipe, CB_Equipe1_Joueur1, CB_Equipe1_Joueur2, CB_Equipe1_Joueur3, CB_Equipe1_Joueur4,CB_Equipe2_Joueur1, CB_Equipe2_Joueur2, CB_Equipe2_Joueur3, CB_Equipe2_Joueur4;
     private JButton BT_Retour, BT_Jouer;
     private JLabel JL_Joueur1, JL_Joueur2, JL_Joueur3, JL_Joueur4, JL_Select_Equipe, JL_Equipe2, JL_Equipe1;
     private JSeparator jSeparator3;
     private PlateauGUI plateauGUI;
     private Dimension dimPlateau, dimRecap;
+    private ButtonGroup GP_Joueur1 , GP_Joueur2 , GP_Joueur3 , GP_Joueur4;
     
     public PseudoGUI() {
         initComponents();
@@ -45,16 +48,32 @@ public class PseudoGUI extends JFrame {
         jSeparator3 = new JSeparator();
         JL_Joueur4 = new JLabel();
         TF_Joueur4 = new JTextField();
-        CB_Equipe = new JCheckBox();
-        CB_Equipe1_Joueur1 = new JCheckBox();
-        CB_Equipe1_Joueur2 = new JCheckBox();
-        CB_Equipe1_Joueur3 = new JCheckBox();
-        CB_Equipe1_Joueur4 = new JCheckBox();
-        CB_Equipe2_Joueur1 = new JCheckBox();
-        CB_Equipe2_Joueur2 = new JCheckBox();
-        CB_Equipe2_Joueur3 = new JCheckBox();
-        CB_Equipe2_Joueur4 = new JCheckBox();
+        CB_Equipe = new JRadioButton();
+        CB_Equipe1_Joueur1 = new JRadioButton();
+        CB_Equipe1_Joueur2 = new JRadioButton();
+        CB_Equipe1_Joueur3 = new JRadioButton();
+        CB_Equipe1_Joueur4 = new JRadioButton();
+        CB_Equipe2_Joueur1 = new JRadioButton();
+        CB_Equipe2_Joueur2 = new JRadioButton();
+        CB_Equipe2_Joueur3 = new JRadioButton();
+        CB_Equipe2_Joueur4 = new JRadioButton();
+        GP_Joueur1 = new ButtonGroup();
+        GP_Joueur2 = new ButtonGroup();
+        GP_Joueur3 = new ButtonGroup();
+        GP_Joueur4 = new ButtonGroup();
+        GP_Joueur1.add(CB_Equipe1_Joueur1);
+        GP_Joueur1.add(CB_Equipe2_Joueur1);
+        GP_Joueur2.add(CB_Equipe1_Joueur2);
+        GP_Joueur2.add(CB_Equipe2_Joueur2);
+        GP_Joueur3.add(CB_Equipe1_Joueur3);
+        GP_Joueur3.add(CB_Equipe2_Joueur3);      
+        GP_Joueur4.add(CB_Equipe1_Joueur4);
+        GP_Joueur4.add(CB_Equipe2_Joueur4);
+        
+        
         BT_Jouer = new JButton();
+        
+        
         
         //initialisation des valeurs textes des JLabels
         BT_Retour.setText("<- Retour");
@@ -136,6 +155,48 @@ public class PseudoGUI extends JFrame {
         BT_Jouer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BT_JouerActionPerformed(evt);
+            }
+        });
+        
+        CB_Equipe1_Joueur1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+        CB_Equipe2_Joueur1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+        CB_Equipe1_Joueur2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+        CB_Equipe2_Joueur2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+        CB_Equipe1_Joueur3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+         CB_Equipe2_Joueur3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+          CB_Equipe1_Joueur4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
+            }
+        });
+          
+          CB_Equipe2_Joueur4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_EquipeActionPerformed(evt);
             }
         });
 
@@ -343,6 +404,8 @@ public class PseudoGUI extends JFrame {
         return count;
     }
     
+    
+    
     private void creerPartie(){
         HashMap<String, Integer> mapJoueurs = new HashMap();
         ArrayList<String> pseudo = new ArrayList<String>();
@@ -350,8 +413,7 @@ public class PseudoGUI extends JFrame {
         pseudo.add(TF_Joueur2.getText());
         pseudo.add(TF_Joueur3.getText());
         pseudo.add(TF_Joueur4.getText());
-<<<<<<< Updated upstream
-=======
+        
         if (checkNbJoueur(pseudo) == 2 )
         {
             mapJoueurs.put(TF_Joueur1.getText(),0);
@@ -375,9 +437,6 @@ public class PseudoGUI extends JFrame {
         dimPlateau = new Dimension(800,800);
         dimRecap = new Dimension(400,800);
         plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
-        
-        
->>>>>>> Stashed changes
         
         mapJoueurs.put(TF_Joueur1.getText(),1);
         mapJoueurs.put(TF_Joueur2.getText(),2);

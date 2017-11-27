@@ -18,8 +18,9 @@ import javax.swing.event.DocumentListener;
 
 public class PseudoGUI extends JFrame {
     private JTextField TF_Joueur1, TF_Joueur2, TF_Joueur3, TF_Joueur4 ;
-    private JRadioButton CB_Equipe, CB_Equipe1_Joueur1, CB_Equipe1_Joueur2, CB_Equipe1_Joueur3, CB_Equipe1_Joueur4,CB_Equipe2_Joueur1, CB_Equipe2_Joueur2, CB_Equipe2_Joueur3, CB_Equipe2_Joueur4;
+    private JRadioButton RB_Equipe1_Joueur1, RB_Equipe1_Joueur2, RB_Equipe1_Joueur3, RB_Equipe1_Joueur4,RB_Equipe2_Joueur1, RB_Equipe2_Joueur2, RB_Equipe2_Joueur3, RB_Equipe2_Joueur4;
     private JButton BT_Retour, BT_Jouer;
+    private JCheckBox CB_Equipe;
     private JLabel JL_Joueur1, JL_Joueur2, JL_Joueur3, JL_Joueur4, JL_Select_Equipe, JL_Equipe2, JL_Equipe1;
     private JSeparator jSeparator3;
     private PlateauGUI plateauGUI;
@@ -48,32 +49,37 @@ public class PseudoGUI extends JFrame {
         jSeparator3 = new JSeparator();
         JL_Joueur4 = new JLabel();
         TF_Joueur4 = new JTextField();
-        CB_Equipe = new JRadioButton();
-        CB_Equipe1_Joueur1 = new JRadioButton();
-        CB_Equipe1_Joueur2 = new JRadioButton();
-        CB_Equipe1_Joueur3 = new JRadioButton();
-        CB_Equipe1_Joueur4 = new JRadioButton();
-        CB_Equipe2_Joueur1 = new JRadioButton();
-        CB_Equipe2_Joueur2 = new JRadioButton();
-        CB_Equipe2_Joueur3 = new JRadioButton();
-        CB_Equipe2_Joueur4 = new JRadioButton();
+        CB_Equipe = new JCheckBox();
+        RB_Equipe1_Joueur1 = new JRadioButton();
+        RB_Equipe1_Joueur1.setActionCommand("Equipe1");
+        RB_Equipe1_Joueur2 = new JRadioButton();
+        RB_Equipe1_Joueur2.setActionCommand("Equipe1");
+        RB_Equipe1_Joueur3 = new JRadioButton();
+        RB_Equipe1_Joueur3.setActionCommand("Equipe1");
+        RB_Equipe1_Joueur4 = new JRadioButton();
+        RB_Equipe1_Joueur4.setActionCommand("Equipe1");
+        RB_Equipe2_Joueur1 = new JRadioButton();
+        RB_Equipe2_Joueur1.setActionCommand("Equipe2");
+        RB_Equipe2_Joueur2 = new JRadioButton();
+        RB_Equipe2_Joueur2.setActionCommand("Equipe2");
+        RB_Equipe2_Joueur3 = new JRadioButton();
+        RB_Equipe2_Joueur3.setActionCommand("Equipe2");
+        RB_Equipe2_Joueur4 = new JRadioButton();
+        RB_Equipe2_Joueur4.setActionCommand("Equipe2");
         GP_Joueur1 = new ButtonGroup();
         GP_Joueur2 = new ButtonGroup();
         GP_Joueur3 = new ButtonGroup();
         GP_Joueur4 = new ButtonGroup();
-        GP_Joueur1.add(CB_Equipe1_Joueur1);
-        GP_Joueur1.add(CB_Equipe2_Joueur1);
-        GP_Joueur2.add(CB_Equipe1_Joueur2);
-        GP_Joueur2.add(CB_Equipe2_Joueur2);
-        GP_Joueur3.add(CB_Equipe1_Joueur3);
-        GP_Joueur3.add(CB_Equipe2_Joueur3);      
-        GP_Joueur4.add(CB_Equipe1_Joueur4);
-        GP_Joueur4.add(CB_Equipe2_Joueur4);
-        
+        GP_Joueur1.add(RB_Equipe1_Joueur1);
+        GP_Joueur1.add(RB_Equipe2_Joueur1);
+        GP_Joueur2.add(RB_Equipe1_Joueur2);
+        GP_Joueur2.add(RB_Equipe2_Joueur2);
+        GP_Joueur3.add(RB_Equipe1_Joueur3);
+        GP_Joueur3.add(RB_Equipe2_Joueur3);      
+        GP_Joueur4.add(RB_Equipe1_Joueur4);
+        GP_Joueur4.add(RB_Equipe2_Joueur4);
         
         BT_Jouer = new JButton();
-        
-        
         
         //initialisation des valeurs textes des JLabels
         BT_Retour.setText("<- Retour");
@@ -88,14 +94,14 @@ public class PseudoGUI extends JFrame {
         JL_Equipe2.setText("Equipe 2");
         BT_Jouer.setEnabled(false);
         CB_Equipe.setEnabled(false);
-        CB_Equipe1_Joueur1.setEnabled(false);
-        CB_Equipe1_Joueur2.setEnabled(false);
-        CB_Equipe1_Joueur3.setEnabled(false);
-        CB_Equipe1_Joueur4.setEnabled(false);
-        CB_Equipe2_Joueur1.setEnabled(false);
-        CB_Equipe2_Joueur2.setEnabled(false);
-        CB_Equipe2_Joueur3.setEnabled(false);
-        CB_Equipe2_Joueur4.setEnabled(false);
+        RB_Equipe1_Joueur1.setEnabled(false);
+        RB_Equipe1_Joueur2.setEnabled(false);
+        RB_Equipe1_Joueur3.setEnabled(false);
+        RB_Equipe1_Joueur4.setEnabled(false);
+        RB_Equipe2_Joueur1.setEnabled(false);
+        RB_Equipe2_Joueur2.setEnabled(false);
+        RB_Equipe2_Joueur3.setEnabled(false);
+        RB_Equipe2_Joueur4.setEnabled(false);
         JL_Equipe2.setEnabled(false);
         JL_Equipe1.setEnabled(false);
         
@@ -158,48 +164,6 @@ public class PseudoGUI extends JFrame {
             }
         });
         
-        CB_Equipe1_Joueur1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-        CB_Equipe2_Joueur1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-        CB_Equipe1_Joueur2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-        CB_Equipe2_Joueur2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-        CB_Equipe1_Joueur3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-         CB_Equipe2_Joueur3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-          CB_Equipe1_Joueur4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-          
-          CB_Equipe2_Joueur4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
-
         //code généré automatique par l'IDE pour la création de la JFrame
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -211,10 +175,10 @@ public class PseudoGUI extends JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CB_Equipe1_Joueur4)
-                            .addComponent(CB_Equipe1_Joueur3)
-                            .addComponent(CB_Equipe1_Joueur2)
-                            .addComponent(CB_Equipe1_Joueur1)))
+                            .addComponent(RB_Equipe1_Joueur4)
+                            .addComponent(RB_Equipe1_Joueur3)
+                            .addComponent(RB_Equipe1_Joueur2)
+                            .addComponent(RB_Equipe1_Joueur1)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(JL_Equipe1)
                         .addGap(18, 18, 18)
@@ -223,10 +187,10 @@ public class PseudoGUI extends JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CB_Equipe2_Joueur2)
-                                    .addComponent(CB_Equipe2_Joueur1)
-                                    .addComponent(CB_Equipe2_Joueur3)
-                                    .addComponent(CB_Equipe2_Joueur4))))))
+                                    .addComponent(RB_Equipe2_Joueur2)
+                                    .addComponent(RB_Equipe2_Joueur1)
+                                    .addComponent(RB_Equipe2_Joueur3)
+                                    .addComponent(RB_Equipe2_Joueur4))))))
                 .addContainerGap(216, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -268,19 +232,19 @@ public class PseudoGUI extends JFrame {
                                     .addComponent(JL_Equipe1)
                                     .addComponent(JL_Equipe2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(CB_Equipe2_Joueur1))
-                            .addComponent(CB_Equipe1_Joueur1))
+                                .addComponent(RB_Equipe2_Joueur1))
+                            .addComponent(RB_Equipe1_Joueur1))
                         .addGap(26, 26, 26)
-                        .addComponent(CB_Equipe2_Joueur2))
-                    .addComponent(CB_Equipe1_Joueur2))
+                        .addComponent(RB_Equipe2_Joueur2))
+                    .addComponent(RB_Equipe1_Joueur2))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CB_Equipe2_Joueur3)
-                    .addComponent(CB_Equipe1_Joueur3))
+                    .addComponent(RB_Equipe2_Joueur3)
+                    .addComponent(RB_Equipe1_Joueur3))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(CB_Equipe2_Joueur4)
-                    .addComponent(CB_Equipe1_Joueur4))
+                    .addComponent(RB_Equipe2_Joueur4)
+                    .addComponent(RB_Equipe1_Joueur4))
                 .addContainerGap(87, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -350,28 +314,28 @@ public class PseudoGUI extends JFrame {
             if (nbJoueur >3){
                  BT_Jouer.setEnabled(true);
                  CB_Equipe.setEnabled(true);
-                 CB_Equipe1_Joueur1.setEnabled(true);
-                 CB_Equipe1_Joueur2.setEnabled(true);
-                 CB_Equipe1_Joueur3.setEnabled(true);
-                 CB_Equipe1_Joueur4.setEnabled(true);
-                 CB_Equipe2_Joueur1.setEnabled(true);
-                 CB_Equipe2_Joueur2.setEnabled(true);
-                 CB_Equipe2_Joueur3.setEnabled(true);
-                 CB_Equipe2_Joueur4.setEnabled(true);
+                 RB_Equipe1_Joueur1.setEnabled(true);
+                 RB_Equipe1_Joueur2.setEnabled(true);
+                 RB_Equipe1_Joueur3.setEnabled(true);
+                 RB_Equipe1_Joueur4.setEnabled(true);
+                 RB_Equipe2_Joueur1.setEnabled(true);
+                 RB_Equipe2_Joueur2.setEnabled(true);
+                 RB_Equipe2_Joueur3.setEnabled(true);
+                 RB_Equipe2_Joueur4.setEnabled(true);
                  JL_Equipe2.setEnabled(true);
                  JL_Equipe1.setEnabled(true);
             }
             else {
                  BT_Jouer.setEnabled(true);
                  CB_Equipe.setEnabled(false);
-                 CB_Equipe1_Joueur1.setEnabled(false);
-                 CB_Equipe1_Joueur2.setEnabled(false);
-                 CB_Equipe1_Joueur3.setEnabled(false);
-                 CB_Equipe1_Joueur4.setEnabled(false);
-                 CB_Equipe2_Joueur1.setEnabled(false);
-                 CB_Equipe2_Joueur2.setEnabled(false);
-                 CB_Equipe2_Joueur3.setEnabled(false);
-                 CB_Equipe2_Joueur4.setEnabled(false);
+                 RB_Equipe1_Joueur1.setEnabled(false);
+                 RB_Equipe1_Joueur2.setEnabled(false);
+                 RB_Equipe1_Joueur3.setEnabled(false);
+                 RB_Equipe1_Joueur4.setEnabled(false);
+                 RB_Equipe2_Joueur1.setEnabled(false);
+                 RB_Equipe2_Joueur2.setEnabled(false);
+                 RB_Equipe2_Joueur3.setEnabled(false);
+                 RB_Equipe2_Joueur4.setEnabled(false);
                  JL_Equipe2.setEnabled(false);
                  JL_Equipe1.setEnabled(false);
             }
@@ -379,21 +343,21 @@ public class PseudoGUI extends JFrame {
         else {
             BT_Jouer.setEnabled(false);
             CB_Equipe.setEnabled(false);
-            CB_Equipe1_Joueur1.setEnabled(false);
-            CB_Equipe1_Joueur2.setEnabled(false);
-            CB_Equipe1_Joueur3.setEnabled(false);
-            CB_Equipe1_Joueur4.setEnabled(false);
-            CB_Equipe2_Joueur1.setEnabled(false);
-            CB_Equipe2_Joueur2.setEnabled(false);
-            CB_Equipe2_Joueur3.setEnabled(false);
-            CB_Equipe2_Joueur4.setEnabled(false);
+            RB_Equipe1_Joueur1.setEnabled(false);
+            RB_Equipe1_Joueur2.setEnabled(false);
+            RB_Equipe1_Joueur3.setEnabled(false);
+            RB_Equipe1_Joueur4.setEnabled(false);
+            RB_Equipe2_Joueur1.setEnabled(false);
+            RB_Equipe2_Joueur2.setEnabled(false);
+            RB_Equipe2_Joueur3.setEnabled(false);
+            RB_Equipe2_Joueur4.setEnabled(false);
             JL_Equipe2.setEnabled(false);
             JL_Equipe1.setEnabled(false);
         }
         }
 
     private int checkNbJoueur(ArrayList<String> pseudo){
-        int i, count=0;
+        int count=0;
         
         for(String tmp : pseudo){
             if(!tmp.equals("")){
@@ -404,48 +368,48 @@ public class PseudoGUI extends JFrame {
         return count;
     }
     
-    
-    
     private void creerPartie(){
-        HashMap<String, Integer> mapJoueurs = new HashMap();
+        String equipe;
+        int compteur = 0;
+        ArrayList<ButtonGroup> groupesBoutons;
+        HashMap<String, Integer> mapJoueurs = new HashMap<String,Integer>();
         ArrayList<String> pseudo = new ArrayList<String>();
         pseudo.add(TF_Joueur1.getText());
         pseudo.add(TF_Joueur2.getText());
         pseudo.add(TF_Joueur3.getText());
         pseudo.add(TF_Joueur4.getText());
         
-        if (checkNbJoueur(pseudo) == 2 )
-        {
+        //si 2 ou 3 joueurs => mode chacun pour soit
+        if (checkNbJoueur(pseudo) == 2){
             mapJoueurs.put(TF_Joueur1.getText(),0);
             mapJoueurs.put(TF_Joueur2.getText(),0);
         }  
-        else {if (checkNbJoueur(pseudo) == 3 ){
+        else if (checkNbJoueur(pseudo) == 3){
             mapJoueurs.put(TF_Joueur1.getText(),0);
             mapJoueurs.put(TF_Joueur2.getText(),0);
             mapJoueurs.put(TF_Joueur3.getText(),0);
-        }else {if (checkNbJoueur(pseudo) == 4 ){
-            mapJoueurs.put(TF_Joueur1.getText(),1);
-            mapJoueurs.put(TF_Joueur2.getText(),2);
-            mapJoueurs.put(TF_Joueur3.getText(),2);
-            mapJoueurs.put(TF_Joueur4.getText(),1);
-        }}}
-            
-       /* mapJoueurs.put("Damien",1);
-        mapJoueurs.put("Marion",2);
-        mapJoueurs.put("Jordan",2);
-        mapJoueurs.put("Fred",1);*/
-        dimPlateau = new Dimension(800,800);
-        dimRecap = new Dimension(400,800);
-        plateauGUI = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
-        
-        mapJoueurs.put(TF_Joueur1.getText(),1);
-        mapJoueurs.put(TF_Joueur2.getText(),2);
-        
-        if(checkNbJoueur(pseudo) == 3){
-            mapJoueurs.put(TF_Joueur3.getText(),0);
         }
-        if(checkNbJoueur(pseudo) == 4){
-            mapJoueurs.put(TF_Joueur4.getText(),0);
+        //si 4 joueurs => mode par équipe ou chacun pour soit
+        else if (checkNbJoueur(pseudo) == 4){
+            groupesBoutons = new ArrayList<ButtonGroup>();
+            groupesBoutons.add(GP_Joueur1);
+            groupesBoutons.add(GP_Joueur2);
+            groupesBoutons.add(GP_Joueur3);
+            groupesBoutons.add(GP_Joueur4);
+            
+            for(ButtonGroup tmp : groupesBoutons){
+                if(tmp.getSelection() != null){
+                    if(tmp.getSelection().getActionCommand().equals("Equipe1")){
+                        mapJoueurs.put(pseudo.get(compteur),1);
+                    }else{
+                        mapJoueurs.put(pseudo.get(compteur),2);
+                    }                
+                }
+                else{
+                    mapJoueurs.put(pseudo.get(compteur),0);
+                }
+                compteur++;              
+            }
         }
          
         dimPlateau = new Dimension(800,800);

@@ -7,10 +7,12 @@ public class Equipe {
     private int nbJetons;
     private ArrayList<Joueur> joueurs;
     private Color couleur;
+    private String nom;
     
-    public Equipe(Color couleur){
+    public Equipe(Color couleur, String nom){
         this.nbJetons = 0;
         this.couleur = couleur;
+        this.nom = nom;
         this.joueurs = new ArrayList<Joueur>();
     }
     
@@ -24,6 +26,10 @@ public class Equipe {
     
     public ArrayList<Joueur> getJoueurs(){
         return joueurs;
+    }
+    
+    public String getNom(){
+        return nom;
     }
     
     public void gagnerJeton(){

@@ -39,8 +39,8 @@ public class Plateau implements InterfacePlateau {
         listeJoueurs = new ArrayList<Joueur>();      
         //check si le mode par équipe est activé
         if(mapJoueurs.containsValue(1)){
-            equipe1 = new Equipe(Color.RED);
-            equipe2 = new Equipe(Color.BLUE);
+            equipe1 = new Equipe(Color.RED, "Rouge");
+            equipe2 = new Equipe(Color.BLUE, "Bleue");
             for(Map.Entry<String,Integer> e : mapJoueurs.entrySet()){
                 joueur = new Joueur(e.getKey());
                 if(e.getValue() == 1){
@@ -52,7 +52,7 @@ public class Plateau implements InterfacePlateau {
                     joueur.intégrerEquipe(equipe2);
                     equipe2.intégrerJoueur(joueur);
                     listeJoueurs.add(joueur);
-                }
+                } 
             } 
             joueurCourant = equipe1.getJoueurs().get(0);
         }
@@ -320,26 +320,64 @@ public class Plateau implements InterfacePlateau {
 
     @Override
     public String getGagnant() {
+        //mode par équipe
         if(isEquipeMode()){
             if(equipe1.getNbJetons() > equipe2.getNbJetons()){
-                return "Equipe 1";
+                return equipe1.getNom();
             }
             else if(equipe1.getNbJetons() < equipe2.getNbJetons()){
-                return "Equipe 2";
+                return equipe2.getNom();
             }
             else{
-                return "Egalité";
+                return getJoueurGagant().getEquipe().getNom();    
+            } 
+        }
+        //mode chacun pour soit
+        else{
+            return getJoueurGagant().getPseudo();
+        }
+    }
+    
+    private Joueur getJoueurGagant(){
+        int nb, importanceMax, max = -1;
+        ArrayList<Joueur> liste = new ArrayList<Joueur>();
+        Joueur gagnantFinal = null, meilleur;
+        
+        meilleur = listeJoueurs.get(0);
+
+        for(Joueur tmp : listeJoueurs){
+            nb = tmp.getListeJetons().size();
+            if(nb == max){
+                liste.add(tmp);
+            }
+            else if(nb > max){
+                max = nb;
+                meilleur = tmp;
+                liste.clear();
             }
         }
-        else{
-            int nb, max = 0;
-            Joueur meilleur;
-            
-            /*for(Joueur tmp : listeJoueurs){
-                nb = tmp.getListeJetons().size();
-                
-            }*/
-            return "Damien";
+
+        //s'il y a qu'un seul gagnant
+        if(liste.isEmpty()){
+            gagnantFinal = meilleur;
         }
+        //si plusieurs joueurs ont le même nombre de jetons
+        else{
+            importanceMax = 0;
+            liste.add(meilleur);
+            gagnantFinal = meilleur;
+            
+            for(Joueur tmp : liste){
+                System.out.println(tmp.getPseudo());
+                ArrayList<Jeton> jetons = tmp.getListeJetons();
+                for(Jeton current : jetons){
+                    if(current.getImportance() > importanceMax){
+                        importanceMax = current.getImportance();
+                        gagnantFinal = tmp;
+                    }
+                }
+            }
+        }
+        return gagnantFinal;
     }
 }

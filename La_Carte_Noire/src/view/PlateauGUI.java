@@ -307,7 +307,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         if(!controler.isEnd()){
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);
-            winerFrame.setUndecorated(true);
+            //winerFrame.setUndecorated(true);
             winerFrame.setLocationRelativeTo(null);
             winerFrame.setLayout(new BorderLayout());
             JPanel panBoutons = new JPanel(new GridLayout(0,2));
@@ -329,7 +329,13 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
                     SwingUtilities.getWindowAncestor(getContentPane()).dispose();
                 }
             }); 
-            JLabel gagnant = new JLabel("Le gagnant est :" + controler.getGagnant());
+            JLabel gagnant = new JLabel();
+            if(controler.isEquipeMode()){
+                gagnant.setText("L'équipe gagnante est :" + controler.getGagnant());
+            }
+            else{
+                gagnant.setText("Le gagnant est :" + controler.getGagnant());
+            }
             gagnant.setFont(gagnant.getFont().deriveFont(30f));
             winerFrame.add(gagnant,BorderLayout.CENTER);
             winerFrame.setVisible(true);

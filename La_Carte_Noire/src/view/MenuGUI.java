@@ -58,7 +58,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 Bouton_ScoresMouseClicked(evt);
             }
         });
-        getContentPane().add(Bouton_Scores, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 300, -1, -1));
+        getContentPane().add(Bouton_Scores, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 300, -1, -1));
 
         Bouton_Options.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Bouton options_dark.png"))); // NOI18N
         Bouton_Options.setMnemonic('o');
@@ -114,7 +114,7 @@ public class MenuGUI extends javax.swing.JFrame {
     private void Bouton_JouerMouseClicked(java.awt.event.MouseEvent evt) {                                          
 
         java.awt.EventQueue.invokeLater(() -> {
-            new PseudoGUI().setVisible(true);
+            new PseudoGUItest().setVisible(true);
         });
     } 
     

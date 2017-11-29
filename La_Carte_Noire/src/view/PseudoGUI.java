@@ -158,11 +158,7 @@ public class PseudoGUI extends JFrame {
             }
         });
   
-        BT_Jouer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BT_JouerActionPerformed(evt);
-            }
-        });
+        BT_Jouer.addActionListener(this::BT_JouerActionPerformed);
         
         //code généré automatique par l'IDE pour la création de la JFrame
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

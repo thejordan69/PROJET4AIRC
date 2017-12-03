@@ -43,11 +43,11 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         private HashMap<String,Integer> mapJoueurs;
         
 	public PlateauGUI(Dimension plateauSize, Dimension recapSize, HashMap<String,Integer> mapJoueurs) {     
-            this.setTitle("Damier");
+            this.setTitle("Plateau");
             this.setSize(new Dimension(plateauSize.width+recapSize.width,plateauSize.height+recapSize.height));
-            this.setLocationRelativeTo(null);
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
             this.setLayout(new BorderLayout());
+            this.setVisible(true);
             
             //sauvegarde des paramètres afin de les réutiliser en cas de deuxième partie
             this.plateauSize = plateauSize;
@@ -80,6 +80,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             panel.add(square);	
         }     
         this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
     

@@ -195,11 +195,6 @@ public class PseudoGUI extends JFrame {
                 BT_RetourActionPerformed(evt);
             }
         });
-        CB_Equipe.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_EquipeActionPerformed(evt);
-            }
-        });
         BT_Jouer.addActionListener(this::BT_JouerActionPerformed);  
         
         this.pack();
@@ -210,10 +205,6 @@ public class PseudoGUI extends JFrame {
     private void BT_RetourActionPerformed(ActionEvent evt) {
         this.dispose();
         MenuGUI menu = new MenuGUI(); 
-    }
-
-    private void CB_EquipeActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void BT_JouerActionPerformed(ActionEvent evt) {

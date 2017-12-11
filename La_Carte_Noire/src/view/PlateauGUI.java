@@ -13,11 +13,14 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,15 +37,17 @@ import model.JoueurIHM;
 import tools.ImageProvider;
 
 public class PlateauGUI extends JFrame implements MouseListener, MouseMotionListener, Observer {
-        private GameControler controler;
-        private JLayeredPane layeredPane;
-        private JPanel panel, recap, recapEquipe, recapJoueurs;
-        private JLabel carte;
-        private int xAdjustment, yAdjustment, oldIndex;
-        private Dimension plateauSize, recapSize;
-        private HashMap<String,Integer> mapJoueurs;
+    private GameControler controler;
+    private JLayeredPane layeredPane;
+    private JPanel panel, recap, recapEquipe, recapJoueurs, recapTitres;
+    private JLabel carte;
+    private int xAdjustment, yAdjustment, oldIndex;
+    private Dimension plateauSize, recapSize;
+    private HashMap<String,Integer> mapJoueurs;
+    private JFrame frame;
         
-	public PlateauGUI(Dimension plateauSize, Dimension recapSize, HashMap<String,Integer> mapJoueurs) {     
+    public PlateauGUI(Dimension plateauSize, Dimension recapSize, HashMap<String,Integer> mapJoueurs) {   
+            frame = (JFrame) this;
             this.setTitle("Plateau");
             this.setSize(new Dimension(plateauSize.width+recapSize.width,plateauSize.height+recapSize.height));
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -69,6 +74,15 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             this.createRecap(recapSize,mapJoueurs);
             this.controler.addObserver((Observer) this); 
 	}    
+    
+    public static void main(String[] args) {
+        HashMap<String, Integer> mapJoueurs = new HashMap<String,Integer>();
+        mapJoueurs.put("Marion",2);
+        mapJoueurs.put("test",1);
+        mapJoueurs.put("aaaa",1);
+        mapJoueurs.put("damien",2);
+        new PlateauGUI(new Dimension(800,800),new Dimension(400,800),mapJoueurs); 
+    }
 	
     //méthode qui permet de créer le damier
     private void createGrid(){
@@ -118,16 +132,43 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             recap.add(recapEquipe);
         }
         
+        //génération des titres des colonnes
+        recapTitres = new JPanel(new GridLayout(0,4));
+        recapTitres.setPreferredSize(new Dimension(recapSize.width,50));
+        JLabel jlJeton = new JLabel("Jetons",JLabel.CENTER);
+        jlJeton.setFont(jlJeton.getFont().deriveFont(20f));
+        JLabel jlCarte = new JLabel("Cartes",JLabel.CENTER);
+        jlCarte.setFont(jlJeton.getFont().deriveFont(20f));
+        JLabel jlScore = new JLabel("Score",JLabel.CENTER);
+        jlScore.setFont(jlJeton.getFont().deriveFont(20f));
+        JLabel jlPseudo = new JLabel("Pseudo",JLabel.CENTER);
+        jlPseudo.setFont(jlJeton.getFont().deriveFont(20f));
+        recapTitres.add(jlJeton);
+        recapTitres.add(jlCarte);
+        recapTitres.add(jlScore);
+        recapTitres.add(jlPseudo);
+        recap.add(recapTitres);
+        
         //affichage des scores des joueurs
         ArrayList<JoueurIHM> joueurs = controler.getJoueursIHM();
-        recapJoueurs = new JPanel(new GridLayout(joueurs.size()*2,3));
-        recapJoueurs.setPreferredSize(new Dimension(recapSize.width,recapSize.height-100));
+        recapJoueurs = new JPanel(new GridLayout(joueurs.size(),4));
+        if(controler.isEquipeMode()){
+            recapJoueurs.setPreferredSize(new Dimension(recapSize.width,recapSize.height-170));
+        }
+        else{
+            recapJoueurs.setPreferredSize(new Dimension(recapSize.width,recapSize.height-62));
+        }
         for(JoueurIHM joueur : joueurs){
-            JPanel JPcurrent = new JPanel(new GridLayout(0,3));
+            JPanel JPcurrent = new JPanel(new GridLayout(0,4));
             JPanel JPpions = new JPanel(new GridLayout(2,4));
+            JPpions.setBorder(BorderFactory.createLineBorder(Color.black));
             JPcurrent.add(JPpions);
+            JPanel JPcartes = new JPanel(new GridLayout(4,4));
+            JPcartes.setBorder(BorderFactory.createLineBorder(Color.black));
+            JPcurrent.add(JPcartes);      
             JLabel JLscore = new JLabel(joueur.getScore(),JLabel.CENTER);
             JLscore.setFont(JLscore.getFont().deriveFont(20f));
+            JLscore.setBorder(BorderFactory.createLineBorder(Color.black));
             if(joueur.getEquipe() != null){
                 JLscore.setForeground(joueur.getEquipe().getCouleur());
             }
@@ -137,6 +178,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             JPcurrent.add(JLscore);
             JLabel JLpseudo = new JLabel(joueur.getPseudo(),JLabel.CENTER);
             JLpseudo.setFont(JLpseudo.getFont().deriveFont(20f));
+            JLpseudo.setBorder(BorderFactory.createLineBorder(Color.black));
             if(joueur.getEquipe() != null){
                 JLpseudo.setForeground(joueur.getEquipe().getCouleur());
             }
@@ -289,7 +331,26 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             else{
                 JPcurrent.setBorder(BorderFactory.createEmptyBorder());
             }
-            JLabel JLscore = (JLabel) JPcurrent.getComponent(1);
+            
+            //affichage des cartes avec leur nombre associé
+            HashMap<Couleur,Integer> mapCartes = joueur.getNombreCartes();
+            HashMap<Couleur,Color> translate = new HashMap<Couleur,Color>();
+            translate.put(Couleur.bleue,Color.BLUE);
+            translate.put(Couleur.verte,Color.GREEN);
+            translate.put(Couleur.rouge,Color.RED);
+            translate.put(Couleur.rose,Color.PINK);
+            translate.put(Couleur.cyan,Color.CYAN);
+            translate.put(Couleur.orange,Color.ORANGE);
+            translate.put(Couleur.jaune,Color.YELLOW);
+            ((JPanel) JPcurrent.getComponent(1)).removeAll();
+            for(Map.Entry<Couleur,Integer> tmp : mapCartes.entrySet()){
+                JLabel nb = new JLabel(String.valueOf(tmp.getValue()),JLabel.CENTER);
+                nb.setForeground(translate.get(tmp.getKey()));
+                nb.setFont(nb.getFont().deriveFont(20f));
+                ((JPanel) JPcurrent.getComponent(1)).add(nb);
+            }
+          
+            JLabel JLscore = (JLabel) JPcurrent.getComponent(2);
             JLscore.setText(joueur.getScore());
 
             jetonsJoueur = joueur.getListeJetons();
@@ -309,7 +370,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             controler.saveScores();
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);
-            //winerFrame.setUndecorated(true);
+            winerFrame.setUndecorated(true);
             winerFrame.setLocationRelativeTo(null);
             winerFrame.setLayout(new BorderLayout());
             JPanel panBoutons = new JPanel(new GridLayout(0,2));
@@ -321,13 +382,14 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             winerFrame.add(panBoutons,BorderLayout.SOUTH);
             bouton_rejouer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
-                    getContentPane().setVisible(false);
-                    //recreer un nouveau PlateauGUI
+                    SwingUtilities.getWindowAncestor(getContentPane()).dispose();
+                    Dimension dimPlateau = new Dimension(800,800);
+                    Dimension dimRecap = new Dimension(400,800);
+                    PlateauGUI newPlateau = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
                 }
             }); 
             bouton_quitter.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
-                    //fermer correctement (ici ça reste en tache de fond)
                     SwingUtilities.getWindowAncestor(getContentPane()).dispose();
                 }
             }); 

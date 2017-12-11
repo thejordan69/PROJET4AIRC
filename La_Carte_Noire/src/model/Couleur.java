@@ -5,5 +5,5 @@ package model;
  * Inspiration Jacques SARAYDARYAN, Adrien GUENARD *
  */
 public enum Couleur {
-	bleue,verte,rouge,rose,jaune,cyan,orange,noire
+    bleue,verte,rouge,rose,jaune,cyan,orange,noire
 }

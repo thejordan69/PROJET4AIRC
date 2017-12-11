@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -52,7 +55,11 @@ public class MenuGUI extends JFrame {
         Bouton_Scores.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                Bouton_ScoresMouseClicked(evt);
+                try {
+                    Bouton_ScoresMouseClicked(evt);
+                } catch (IOException ex) {
+                    Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         this.getContentPane().add(Bouton_Scores, new AbsoluteConstraints(410, 300, -1, -1));
@@ -91,6 +98,7 @@ public class MenuGUI extends JFrame {
         
        this.pack();
        this.setLocationRelativeTo(null);
+       this.setVisible(true);
     }                      
                           
     private void Bouton_AboutMouseClicked(MouseEvent evt) {                                          
@@ -105,7 +113,7 @@ public class MenuGUI extends JFrame {
             //TODO
     } 
     
-    private void Bouton_ScoresMouseClicked(MouseEvent evt) {                                          
+    private void Bouton_ScoresMouseClicked(MouseEvent evt) throws IOException {                                          
             new ScoreGUI();
     }     
 }

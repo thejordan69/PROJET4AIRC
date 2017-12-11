@@ -7,6 +7,5 @@ public class LauncherGUI {
     
     public static void main(String[] args) {
         menu = new MenuGUI(); 
-        menu.setVisible(true);
     }
 }

@@ -7,11 +7,8 @@ public class CarteNoire extends AbstractCarte {
     }
     
     public boolean isMoveOk(int xFinal, int yFinal){
-        //on test si le déplacement est en diagonal
-        int diffX = Math.abs(xFinal-this.getX());
-        int diffY = Math.abs(yFinal-this.getY());	
-	return (diffX != diffY);
-    }    
+        return ((xFinal == this.getX() && yFinal != this.getY()) || (xFinal != this.getX() && yFinal == this.getY()));
+    }   
     
     public boolean move(int xFinal, int yFinal){
         this.coordonnees.setX(xFinal);

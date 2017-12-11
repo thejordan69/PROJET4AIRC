@@ -8,9 +8,7 @@ public class ImageProvider {
 	/**
 	 * private pour ne pas instancier d'objets
 	 */
-	private ImageProvider() {
-
-	}	
+	private ImageProvider() {}	
 	
 	/**
 	 * @param pieceType

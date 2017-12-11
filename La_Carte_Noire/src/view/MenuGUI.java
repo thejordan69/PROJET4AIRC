@@ -38,7 +38,7 @@ public class MenuGUI extends JFrame {
         Bouton_Jouer.setMargin(new Insets(0, 0, 0, 0));
         Bouton_Jouer.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(MouseEvent evt) {
                 Bouton_JouerMouseClicked(evt);
             }
         });
@@ -51,7 +51,7 @@ public class MenuGUI extends JFrame {
         Bouton_Scores.setMargin(new java.awt.Insets(0, 0, 0, 0));
         Bouton_Scores.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(MouseEvent evt) {
                 Bouton_ScoresMouseClicked(evt);
             }
         });
@@ -63,7 +63,7 @@ public class MenuGUI extends JFrame {
         Bouton_Options.setMargin(new Insets(0, 0, 0, 0));
         Bouton_Options.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(MouseEvent evt) {
                 Bouton_OptionsMouseClicked(evt);
             }
         });
@@ -75,7 +75,7 @@ public class MenuGUI extends JFrame {
         Bouton_About.setMargin(new java.awt.Insets(0, 0, 0, 0));
         Bouton_About.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(MouseEvent evt) {
                 Bouton_AboutMouseClicked(evt);
             }
         });   
@@ -98,7 +98,7 @@ public class MenuGUI extends JFrame {
     } 
     
     private void Bouton_JouerMouseClicked(MouseEvent evt) {                                          
-            new PseudoGUI().setVisible(true);
+            new PseudoGUI();
     } 
     
     private void Bouton_OptionsMouseClicked(MouseEvent evt) {                                          
@@ -106,6 +106,6 @@ public class MenuGUI extends JFrame {
     } 
     
     private void Bouton_ScoresMouseClicked(MouseEvent evt) {                                          
-            //TODO
+            new ScoreGUI();
     }     
 }

@@ -83,4 +83,9 @@ public class GameControler extends Observable implements InterfaceControler {
     public String getGagnant() {
         return plateau.getGagnant();
     }
+    
+    @Override
+    public void saveScores(){
+        plateau.saveScores();
+    }
 }

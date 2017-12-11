@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import tools.Score;
 
 public class Plateau implements InterfacePlateau {
     private ArrayList<AbstractCarte> listeCartes;
@@ -379,5 +380,16 @@ public class Plateau implements InterfacePlateau {
             }
         }
         return gagnantFinal;
+    }
+
+    @Override
+    public void saveScores() {
+        HashMap<String,Integer> map = new HashMap<String,Integer>();
+        
+        //création de la hashmap associant les joueurs à leur score à partir de la liste des joueurs
+        for(Joueur tmp : listeJoueurs){
+            map.put(tmp.getPseudo(),tmp.getScore());
+        }
+        Score.writeScores(map);
     }
 }

@@ -304,8 +304,9 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             i++;
         }
         
-        //si c'est la fin de la partie, on arrête la partie et on affiche le gagnant
+        //si c'est la fin de la partie, on arrête la partie, on sauvegarde les scores et on affiche le gagnant
         if(controler.isEnd()){
+            controler.saveScores();
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);
             //winerFrame.setUndecorated(true);

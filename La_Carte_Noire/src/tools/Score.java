@@ -7,13 +7,28 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
+import model.JoueurScore;
 
 public class Score {
     
     private Score() {}
     
-    public static HashMap<String,Integer> getScores() throws IOException{
+    public static ArrayList<JoueurScore> getScores() throws IOException{
+        HashMap<String,Integer> mapScores = readScores();
+        ArrayList<JoueurScore> joueurs = new ArrayList<JoueurScore>();
+        
+        for(Map.Entry<String,Integer> tmp : mapScores.entrySet()){
+            joueurs.add(new JoueurScore(tmp.getKey(),tmp.getValue()));
+        }
+        Collections.sort(joueurs);
+        Collections.reverse(joueurs);
+        return joueurs;
+    }
+    
+    private static HashMap<String,Integer> readScores() throws IOException{
         HashMap<String,Integer> mapScores = new HashMap<String,Integer>();
         try{
             File fichier = new File("scores.json");
@@ -37,7 +52,7 @@ public class Score {
     public static void writeScores(HashMap<String,Integer> map){
         try {
             ObjectMapper mapper = new ObjectMapper();
-            HashMap<String,Integer> mapFinale = getScores();
+            HashMap<String,Integer> mapFinale = readScores();
             
             for(Map.Entry<String,Integer> tmp : map.entrySet()){
                 //si le joueur existe déjà dans le fichier, on récupère son score et on l'ajoute avec le nouveau

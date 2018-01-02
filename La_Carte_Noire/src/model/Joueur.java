@@ -1,16 +1,17 @@
  package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Joueur {
+public class Joueur implements Serializable {
     private String pseudo;
     private int score;
     private Equipe equipe;
     private HashMap<Couleur,Integer> nombreCartes;
     private ArrayList<Jeton> listeJetons;
     
-    public Joueur(String pseudo){
+    public Joueur(String pseudo) {
         this.pseudo = pseudo;
         this.score = 0;
         this.equipe = null;

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import tools.Score;
 
 public class Plateau implements InterfacePlateau {
@@ -13,10 +14,12 @@ public class Plateau implements InterfacePlateau {
     private Joueur joueurCourant;
     private CarteNoire carteNoire = null;
     private Equipe equipe1, equipe2;
+    private String modeJeu, message;
     
-    public Plateau(HashMap<String,Integer> mapJoueurs){
+    public Plateau(HashMap<String,Integer> mapJoueurs, String mode){
         //création de la collection de cartes du pateau
         this.listeCartes = creerListeCartes();
+        this.modeJeu = mode;
         initJetons();
         initJoueurs(mapJoueurs);
     } 
@@ -39,7 +42,7 @@ public class Plateau implements InterfacePlateau {
         
         listeJoueurs = new ArrayList<Joueur>();      
         //check si le mode par équipe est activé
-        if(mapJoueurs.containsValue(1)){
+        if(modeJeu.equals("equipe")){
             equipe1 = new Equipe(Color.RED, "Rouge");
             equipe2 = new Equipe(Color.BLUE, "Bleue");
             for(Map.Entry<String,Integer> e : mapJoueurs.entrySet()){
@@ -57,7 +60,7 @@ public class Plateau implements InterfacePlateau {
             } 
             joueurCourant = equipe1.getJoueurs().get(0);
         }
-        //le mode par équipe est désactivé
+        //le mode par équipe est désactivé (mode solo ou IA)
         else{
             equipe1 = null;
             equipe2 = null;
@@ -65,8 +68,13 @@ public class Plateau implements InterfacePlateau {
                 joueur = new Joueur(e.getKey());
                 listeJoueurs.add(joueur);
             }
+            if(modeJeu.equals("IA")){
+                joueur = new Joueur("IA");
+                listeJoueurs.add(joueur);
+            }
             joueurCourant = listeJoueurs.get(0);
-        }   
+            message = "Début de la partie, c'est à " + joueurCourant.getPseudo() + " de commencer !";
+        }      
     }
     
     @Override
@@ -144,14 +152,18 @@ public class Plateau implements InterfacePlateau {
     public boolean isMoveOK(int xInit, int yInit, int xFinal, int yFinal) {
         boolean resultat = true;
         
+        if((xInit == xFinal) && (yInit == yFinal)){
+            this.message = "La position initiale est identique à la position finale";
+            resultat = false;
+        }
         //si il n'y a pas de carte aux coordonées finales
-        if (!isCarteHere(xFinal, yFinal)){
-                System.out.println("Il n'y a pas de carte à cette position");
+        else if(!isCarteHere(xFinal, yFinal)){
+                this.message = "Il n'y a pas de carte à cette position";
                 resultat = false;
         }
         //si le déplacement de la carte noire n'est pas correct
-        if (!carteNoire.isMoveOk(xFinal, yFinal)){
-            System.out.println("Le déplacement de la carte noire n'est pas correct");
+        else if(!carteNoire.isMoveOk(xFinal, yFinal)){
+            this.message = "Le déplacement de la carte noire n'est pas correct";
             resultat = false;
         }
         
@@ -250,13 +262,13 @@ public class Plateau implements InterfacePlateau {
                 }       
             }  
         }
-        System.out.println("C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore());
+        this.message = "C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore();
     }
     
     private void miseAjourPion(Couleur couleur){
         int max = 0;
         Joueur meilleur = null;
-        
+                
         for(Joueur tmp : listeJoueurs){
             //récupère le joueur ayant le jeton de la couleur spécifiée ainsi que son nombre de carte pour cette couleur
             if((tmp.getListeJetons().contains(listeJetons.get(couleur))) && !(tmp.getPseudo().equals(joueurCourant.getPseudo()))){
@@ -271,13 +283,13 @@ public class Plateau implements InterfacePlateau {
                 joueurCourant.gagnerJeton(listeJetons.get(couleur));
                 meilleur.perdreJeton(listeJetons.get(couleur));
                 meilleur = null;
-                System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
+                this.message = "Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString();
             }
         }
         //sinon c'est le premier joueur à gagner le jeton
         else if ((meilleur == null) && !(joueurCourant.getListeJetons().contains(listeJetons.get(couleur)))){
             joueurCourant.gagnerJeton(listeJetons.get(couleur));
-            System.out.println("Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString());
+            this.message = "Le joueur " + joueurCourant.getPseudo() + " a gagné le jeton " + couleur.toString();
         }
     }
 
@@ -310,19 +322,14 @@ public class Plateau implements InterfacePlateau {
     }
 
     @Override
-    public Boolean isEquipeMode() {
-        if(equipe1 != null){
-            return true;
-        }
-        else{
-            return false;
-        }
+    public String getGameMode() {
+        return this.modeJeu;
     }
 
     @Override
     public String getGagnant() {
         //mode par équipe
-        if(isEquipeMode()){
+        if(getGameMode().equals("equipe")){
             if(equipe1.getNbJetons() > equipe2.getNbJetons()){
                 return equipe1.getNom();
             }
@@ -369,7 +376,6 @@ public class Plateau implements InterfacePlateau {
             gagnantFinal = meilleur;
             
             for(Joueur tmp : liste){
-                System.out.println(tmp.getPseudo());
                 ArrayList<Jeton> jetons = tmp.getListeJetons();
                 for(Jeton current : jetons){
                     if(current.getImportance() > importanceMax){
@@ -387,9 +393,47 @@ public class Plateau implements InterfacePlateau {
         HashMap<String,Integer> map = new HashMap<String,Integer>();
         
         //création de la hashmap associant les joueurs à leur score à partir de la liste des joueurs
-        for(Joueur tmp : listeJoueurs){
-            map.put(tmp.getPseudo(),tmp.getScore());
+        //si mode de jeu en IA, on met uniquement le joueur dans la liste
+        if(modeJeu.equals("IA")){
+            map.put(listeJoueurs.get(0).getPseudo(), listeJoueurs.get(0).getScore());
+        }
+        else{
+            for(Joueur tmp : listeJoueurs){
+                map.put(tmp.getPseudo(),tmp.getScore());
+            }
         }
         Score.writeScores(map);
+    }
+
+    @Override
+    public void moveIA() {
+        ArrayList<AbstractCarte> cartes = new ArrayList<AbstractCarte>();
+        int i,j, xNoire, yNoire, randomNum;
+        AbstractCarte carteChoisie;
+        
+        xNoire = carteNoire.getX();
+        yNoire = carteNoire.getY();
+        
+        //génération de la liste de cartes pouvant être prises
+        for(i=0;i<6;i++){
+            //analyse de toutes les carte sur la même ligne que celle de la carte noire
+            if(isCarteHere(i,yNoire) && (getCarteCouleur(i,yNoire) != Couleur.noire)){
+                cartes.add(getCarte(i,yNoire));
+            }
+            //analyse de toutes les carte sur la même colonne que celle de la carte noire
+            if(isCarteHere(xNoire,i) && (getCarteCouleur(xNoire,i) != Couleur.noire)){
+                cartes.add(getCarte(xNoire,i));
+            } 
+        }
+        
+        //génération d'un nombre aléatoire entre 0 et les nombre de carte disponibles
+        randomNum = ThreadLocalRandom.current().nextInt(0,cartes.size());
+        carteChoisie = cartes.get(randomNum);
+        move(xNoire,yNoire,carteChoisie.getX(),carteChoisie.getY());
+    }
+    
+    @Override
+    public String getMessage(){
+        return this.message;
     }
 }

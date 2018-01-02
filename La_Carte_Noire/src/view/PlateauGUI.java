@@ -13,14 +13,14 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import java.awt.Component;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,89 +28,94 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
 import model.EquipeIHM;
 import model.Jeton;
 import model.JoueurIHM;
+import tools.ImagePanel;
 import tools.ImageProvider;
 
 public class PlateauGUI extends JFrame implements MouseListener, MouseMotionListener, Observer {
     private GameControler controler;
     private JLayeredPane layeredPane;
-    private JPanel panel, recap, recapEquipe, recapJoueurs, recapTitres;
-    private JLabel carte;
-    private int xAdjustment, yAdjustment, oldIndex;
+    private JPanel panel, recap, bandeau, recapEquipe, recapJoueurs, recapTitres;
+    private JLabel carte, jlMessage;
+    private int xAdjustment, yAdjustment, oldIndex, nbJoueurs;
     private Dimension plateauSize, recapSize;
     private HashMap<String,Integer> mapJoueurs;
-    private JFrame frame;
-        
-    public PlateauGUI(Dimension plateauSize, Dimension recapSize, HashMap<String,Integer> mapJoueurs) {   
-            frame = (JFrame) this;
-            this.setTitle("Plateau");
-            this.setSize(new Dimension(plateauSize.width+recapSize.width,plateauSize.height+recapSize.height));
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-            this.setLayout(new BorderLayout());
-            this.setVisible(true);
-            
-            //sauvegarde des paramètres afin de les réutiliser en cas de deuxième partie
-            this.plateauSize = plateauSize;
-            this.recapSize = recapSize;
-            this.mapJoueurs = mapJoueurs;
-            
-            layeredPane = new JLayeredPane();
-            layeredPane.setPreferredSize(plateauSize);
-            getContentPane().add(layeredPane,BorderLayout.WEST);
-            layeredPane.addMouseListener(this);
-            layeredPane.addMouseMotionListener(this);
-            
-            panel = new JPanel(new GridLayout(6,6));
-            layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
-            panel.setPreferredSize(new Dimension(800,800));
-            panel.setBounds(0,0,plateauSize.width,plateauSize.height);
-            this.createGrid();
-            this.controler = new GameControler(mapJoueurs);
-            this.createRecap(recapSize,mapJoueurs);
-            this.controler.addObserver((Observer) this); 
-	}    
+    private String modeJeu;
+    private boolean isBlocked = false;
     
-    public static void main(String[] args) {
-        HashMap<String, Integer> mapJoueurs = new HashMap<String,Integer>();
-        mapJoueurs.put("Marion",2);
-        mapJoueurs.put("test",1);
-        mapJoueurs.put("aaaa",1);
-        mapJoueurs.put("damien",2);
-        new PlateauGUI(new Dimension(800,800),new Dimension(400,800),mapJoueurs); 
-    }
+    public PlateauGUI(Dimension plateauSize, Dimension recapSize, HashMap<String,Integer> mapJoueurs, String mode) {   
+        this.setTitle("Plateau");
+        this.setSize(new Dimension(plateauSize.width+recapSize.width,plateauSize.height+recapSize.height));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        this.setLayout(new BorderLayout());
+        this.setVisible(true);
+
+        //sauvegarde des paramètres afin de les réutiliser en cas de deuxième partie
+        this.plateauSize = plateauSize;
+        this.recapSize = recapSize;
+        this.mapJoueurs = mapJoueurs;
+        this.modeJeu = mode;
+        this.nbJoueurs = mapJoueurs.size();
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(plateauSize);
+        getContentPane().add(layeredPane,BorderLayout.WEST);
+        layeredPane.addMouseListener(this);
+        layeredPane.addMouseMotionListener(this);
+
+        panel = new ImagePanel("plateau");
+        panel.setLayout(new GridLayout(6,6));
+        layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
+        panel.setPreferredSize(plateauSize);
+        panel.setBounds(0,0,plateauSize.width,plateauSize.height);
+        
+        jlMessage = new JLabel("", JLabel.CENTER);
+        jlMessage.setFont(jlMessage.getFont().deriveFont(15f));
+        getContentPane().add(jlMessage,BorderLayout.SOUTH);
+        
+        this.createGrid();
+        this.controler = new GameControler(mapJoueurs,modeJeu);
+        this.createRecap(recapSize);
+        this.controler.addObserver((Observer) this); 
+    }    
 	
     //méthode qui permet de créer le damier
     private void createGrid(){
         for (int i = 0; i < 36; i++) {
             JPanel square = new JPanel(new BorderLayout());
             square.setSize(100,100);
+            square.setOpaque(false);
             //Ajout d'une propriété contenant l'index pour sauvegarder la position d'un élément sur le damier
             square.putClientProperty("index",i);
             panel.add(square);	
         }     
+        
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
     
     //méthode qui permet de créer le menu récapitulatif
-    private void createRecap(Dimension recapSize, HashMap<String,Integer> mapJoueurs){
+    private void createRecap(Dimension recapSize){
         int i =0;
         
-        recap = new JPanel();
+        recap = new ImagePanel("recap");
         recap.setPreferredSize(recapSize);
         getContentPane().add(recap,BorderLayout.EAST);
 
         //si mode de jeu par équipe, on affiche le bandeau avec le score de chaque équipe
-        if(controler.isEquipeMode()){
+        if(controler.getGameMode().equals("equipe")){
             ArrayList<EquipeIHM> equipes = controler.getEquipesIHM();
             recapEquipe = new JPanel(new GridLayout(2,2));
             recapEquipe.setPreferredSize(new Dimension(recapSize.width,100));
+            recapEquipe.setOpaque(false);
             recapEquipe.setBorder(BorderFactory.createLineBorder(Color.black,2));
             JLabel JLnomEquipe1 = new JLabel("EQUIPE 1",JLabel.CENTER);
             JLnomEquipe1.setForeground(equipes.get(0).getCouleur());
@@ -135,6 +140,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         //génération des titres des colonnes
         recapTitres = new JPanel(new GridLayout(0,4));
         recapTitres.setPreferredSize(new Dimension(recapSize.width,50));
+        recapTitres.setOpaque(false);
         JLabel jlJeton = new JLabel("Jetons",JLabel.CENTER);
         jlJeton.setFont(jlJeton.getFont().deriveFont(20f));
         JLabel jlCarte = new JLabel("Cartes",JLabel.CENTER);
@@ -152,18 +158,28 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         //affichage des scores des joueurs
         ArrayList<JoueurIHM> joueurs = controler.getJoueursIHM();
         recapJoueurs = new JPanel(new GridLayout(joueurs.size(),4));
-        if(controler.isEquipeMode()){
+        recapJoueurs.setOpaque(false);
+        if(controler.getGameMode().equals("equipe")){
             recapJoueurs.setPreferredSize(new Dimension(recapSize.width,recapSize.height-170));
         }
         else{
             recapJoueurs.setPreferredSize(new Dimension(recapSize.width,recapSize.height-62));
         }
         for(JoueurIHM joueur : joueurs){
-            JPanel JPcurrent = new JPanel(new GridLayout(0,4));
-            JPanel JPpions = new JPanel(new GridLayout(2,4));
+            JPanel JPcurrent = new JPanel(new GridLayout(1,4));
+            JPcurrent.setOpaque(false);
+            JPanel JPpions = null;
+            if(nbJoueurs<4){
+                JPpions = new JPanel(new GridLayout(6,1));
+            }
+            else{
+                JPpions = new JPanel(new GridLayout(3,2));
+            }
+            JPpions.setOpaque(false);
             JPpions.setBorder(BorderFactory.createLineBorder(Color.black));
             JPcurrent.add(JPpions);
             JPanel JPcartes = new JPanel(new GridLayout(4,4));
+            JPcartes.setOpaque(false);
             JPcartes.setBorder(BorderFactory.createLineBorder(Color.black));
             JPcurrent.add(JPcartes);      
             JLabel JLscore = new JLabel(joueur.getScore(),JLabel.CENTER);
@@ -194,30 +210,32 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
                   
     @Override
     public void mousePressed(MouseEvent e) {
-            carte = null;
-           
-            Component c =  panel.findComponentAt(e.getX(), e.getY());
-            //si l'utilisateur clique sur une case vide (pas de JLabel) on stop
-            if (c instanceof JPanel) {
-                return;
+        if(isBlocked) return;
+        
+        carte = null;
+
+        Component c =  panel.findComponentAt(e.getX(), e.getY());
+        //si l'utilisateur clique sur une case vide (pas de JLabel) on stop
+        if (c instanceof JPanel) {
+            return;
+        }
+        //sinon, on récupère les coordonnées de la carte et on regarde si elle est bien de couleur noire
+        else if (c instanceof JLabel){
+            JPanel locationPanel = (JPanel) c.getParent();
+            int index = (Integer) locationPanel.getClientProperty("index");
+            Coord coords = new Coord(index%6, index/6);
+            //si c'est bien la noire alors on sauvegarde l'index courant et on fait le traitement
+            if (controler.getCarteCouleur(coords).equals(Couleur.noire)){                  
+                oldIndex = index;
+                Point parentLocation = c.getParent().getLocation();
+                xAdjustment = parentLocation.x - e.getX();
+                yAdjustment = parentLocation.y - e.getY();
+                carte = (JLabel) c;
+                carte.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
+                carte.setSize(carte.getWidth(), carte.getHeight());
+                layeredPane.add(carte, JLayeredPane.DRAG_LAYER);           
             }
-            //sinon, on récupère les coordonnées de la carte et on regarde si elle est bien de couleur noire
-            else if (c instanceof JLabel){
-                JPanel locationPanel = (JPanel) c.getParent();
-                int index = (Integer) locationPanel.getClientProperty("index");
-                Coord coords = new Coord(index%6, index/6);
-                //si c'est bien la noire alors on sauvegarde l'index courant et on fait le traitement
-                if (controler.getCarteCouleur(coords).equals(Couleur.noire)){                  
-                    oldIndex = index;
-                    Point parentLocation = c.getParent().getLocation();
-                    xAdjustment = parentLocation.x - e.getX();
-                    yAdjustment = parentLocation.y - e.getY();
-                    carte = (JLabel) c;
-                    carte.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
-                    carte.setSize(carte.getWidth(), carte.getHeight());
-                    layeredPane.add(carte, JLayeredPane.DRAG_LAYER);           
-                }
-            }  
+        }  
     }
 
     @Override
@@ -229,7 +247,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
     @Override
     public void mouseReleased(MouseEvent e) {
         int movedIndex;
-		
+        
 	if(carte == null) return;
         carte.setVisible(false);
         Component c =  layeredPane.findComponentAt(e.getX(), e.getY());
@@ -244,8 +262,8 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         }
         //si la case n'est pas dans la plateau on regénère l'affichage du plateau et on stop
         else {
-            System.out.println("Les coordonées sont hors limites");
             update(null,null);
+            jlMessage.setText("Les coordonées sont hors limites");
             return;
         }
 
@@ -254,12 +272,8 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         //Calcul de l'index x,y destination
         Coord finalCoord = new Coord(movedIndex%6, movedIndex/6);
         boolean iSMoveSucceded = controler.move(initCoord, finalCoord);
-        if (iSMoveSucceded){
+        if(iSMoveSucceded){
             carte = null;
-            //test si c'est la fin de la partie
-            if(controler.isEnd()){
-                System.out.println("La partie est terminée");
-            }
         }
         
     }
@@ -294,6 +308,10 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         JoueurIHM joueurCourant;
         ArrayList<EquipeIHM> equipes;
 
+        //on redébloque la JFrame du joueur
+        isBlocked = false;
+        //récupère le message du plateau
+        jlMessage.setText(controler.getMessage());
         //Efface et recrée la grille
         panel.removeAll();
         this.createGrid();
@@ -311,7 +329,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         }
         
         //regénération des scores des équipes
-        if(controler.isEquipeMode()){
+        if(controler.getGameMode().equals("equipe")){
             equipes = controler.getEquipesIHM();
             JLabel scoreEquipe1 = (JLabel)recapEquipe.getComponent(2);
             scoreEquipe1.setText(equipes.get(0).getNbJetons());
@@ -324,6 +342,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
         joueurCourant = controler.getJoueurCourantIHM();
         for(Component current : recapJoueurs.getComponents()){
             JPanel JPcurrent = (JPanel) current;
+            JPcurrent.setOpaque(false);
             JoueurIHM joueur = joueurs.get(i);
             if(joueurCourant.getPseudo().equals(joueur.getPseudo())){
                 JPcurrent.setBorder(BorderFactory.createLineBorder(Color.green,2));
@@ -345,7 +364,15 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             ((JPanel) JPcurrent.getComponent(1)).removeAll();
             for(Map.Entry<Couleur,Integer> tmp : mapCartes.entrySet()){
                 JLabel nb = new JLabel(String.valueOf(tmp.getValue()),JLabel.CENTER);
-                nb.setForeground(translate.get(tmp.getKey()));
+                if(tmp.getKey() == Couleur.rose){
+                    nb.setForeground(Color.MAGENTA);
+                }
+                else if(tmp.getKey() == Couleur.orange){
+                    nb.setForeground(new Color(255,113,17));
+                }
+                else{
+                    nb.setForeground(translate.get(tmp.getKey()));
+                }
                 nb.setFont(nb.getFont().deriveFont(20f));
                 ((JPanel) JPcurrent.getComponent(1)).add(nb);
             }
@@ -357,22 +384,33 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             JPanel JPpion = (JPanel) JPcurrent.getComponent(0);
             
             JPpion.removeAll();
-            for(Jeton tmp : jetonsJoueur){    
-                JLabel pion = new JLabel(new ImageIcon(ImageProvider.getImageFile("pion",tmp.getCouleur())),JLabel.LEFT);
+            for(Jeton tmp : jetonsJoueur){  
+                JLabel pion = null;
+                if(nbJoueurs<4){
+                    pion = new JLabel(new ImageIcon(ImageProvider.getImageFile("pion",tmp.getCouleur())),JLabel.CENTER);
+                }
+                else{
+                    pion = new JLabel(new ImageIcon(ImageProvider.getImageFile("pion",tmp.getCouleur())),JLabel.LEFT);
+                }
                 JPpion.add(pion);
-                this.repaint();
             }
             i++;
         }
+        this.repaint();
         
         //si c'est la fin de la partie, on arrête la partie, on sauvegarde les scores et on affiche le gagnant
         if(controler.isEnd()){
+            jlMessage.setText("La partie est terminée");
             controler.saveScores();
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);
             winerFrame.setUndecorated(true);
             winerFrame.setLocationRelativeTo(null);
             winerFrame.setLayout(new BorderLayout());
+            JPanel panBackground = new ImagePanel("JDialog");
+            panBackground.setLayout(new BorderLayout());
+            panBackground.setPreferredSize(new Dimension(700,250));
+            winerFrame.add(panBackground,BorderLayout.NORTH);
             JPanel panBoutons = new JPanel(new GridLayout(0,2));
             panBoutons.setPreferredSize(new Dimension(700,50));
             JButton bouton_rejouer = new JButton("Rejouer");
@@ -385,7 +423,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
                     SwingUtilities.getWindowAncestor(getContentPane()).dispose();
                     Dimension dimPlateau = new Dimension(800,800);
                     Dimension dimRecap = new Dimension(400,800);
-                    PlateauGUI newPlateau = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs);
+                    PlateauGUI newPlateau = new PlateauGUI(dimPlateau,dimRecap,mapJoueurs,modeJeu);
                 }
             }); 
             bouton_quitter.addActionListener(new ActionListener() {
@@ -393,16 +431,29 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
                     SwingUtilities.getWindowAncestor(getContentPane()).dispose();
                 }
             }); 
-            JLabel gagnant = new JLabel();
-            if(controler.isEquipeMode()){
+            JLabel gagnant = new JLabel("",JLabel.CENTER);
+            if(controler.getGameMode().equals("equipe")){
                 gagnant.setText("L'équipe gagnante est :" + controler.getGagnant());
             }
             else{
                 gagnant.setText("Le gagnant est :" + controler.getGagnant());
             }
-            gagnant.setFont(gagnant.getFont().deriveFont(30f));
-            winerFrame.add(gagnant,BorderLayout.CENTER);
+            gagnant.setFont(gagnant.getFont().deriveFont(34f));
+            gagnant.setForeground(Color.BLACK);
+            gagnant.setBorder(new CompoundBorder(gagnant.getBorder(), new EmptyBorder(0,0,20,0)));   
+            panBackground.add(gagnant,BorderLayout.SOUTH);
             winerFrame.setVisible(true);
+        }
+        
+        //si c'est le tour de l'IA, on lance le traitement
+        if(!controler.isEnd() && controler.getGameMode().equals("IA") && controler.getJoueurCourantIHM().getPseudo().equals("IA")){
+            try {
+                //permet de bloquer freezer la JFrame tant que l'IA n'a pas finit son tour 
+                isBlocked = true;
+                controler.moveIA();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(PlateauGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

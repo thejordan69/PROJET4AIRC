@@ -1,6 +1,8 @@
 package model;
 
-public class Jeton {
+import java.io.Serializable;
+
+public class Jeton implements Serializable {
     private Couleur couleur;
     private int importance;
     

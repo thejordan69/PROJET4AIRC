@@ -1,25 +1,30 @@
 package controler;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import model.PlateauSocketServeur;
+import model.PlateauSocketClient;
+import model.PlateauSocket;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.Timer;
 import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
-import model.EquipeIHM;
 import model.JoueurIHM;
-import model.Plateau;
 
-public class GameControler extends Observable implements InterfaceControler {
-    private Plateau plateau;
+public class GameControlerSocket extends Observable implements InterfaceControler, Observer {
+    private PlateauSocket plateau;
+    private String mode;
 
-    public GameControler(HashMap<String,Integer> mapJoueurs, String mode) {
-        this.plateau = new Plateau(mapJoueurs,mode);
-        this.notifyObservers(); 
+    public GameControlerSocket(String pseudo, String IP, String mode) throws IOException {
+        this.mode = mode;
+        if(mode.equals("Serveur")){
+            this.plateau = new PlateauSocketServeur(pseudo,null);
+        }
+        else if(mode.equals("Client")){
+            this.plateau = new PlateauSocketClient(pseudo,IP);
+        }
+        this.plateau.addObserver((Observer) this);
     }
 
     @Override
@@ -30,7 +35,6 @@ public class GameControler extends Observable implements InterfaceControler {
         if(ret){
             ret = plateau.move(initCoord.getX(), initCoord.getY(), finalCoord.getX(), finalCoord.getY());
         }
-
         this.notifyObservers(); 
         return ret;
     }
@@ -47,23 +51,19 @@ public class GameControler extends Observable implements InterfaceControler {
 
     @Override
     public void notifyObservers(Object arg) {
-            super.setChanged();
-            super.notifyObservers(arg); 
+        super.setChanged();
+        super.notifyObservers(arg); 
     }
 
     @Override
     public void addObserver(Observer o){
-            super.addObserver(o);
-            this.notifyObservers(); 
+        super.addObserver(o);
+        this.notifyObservers("controler_cree"); 
     }
 
     @Override
     public boolean isEnd() {
        return plateau.isEnd();
-    }
-
-    public ArrayList<EquipeIHM> getEquipesIHM() {
-        return plateau.getEquipesIHM();
     }
 
     @Override
@@ -74,10 +74,6 @@ public class GameControler extends Observable implements InterfaceControler {
     @Override
     public JoueurIHM getJoueurCourantIHM() {
         return plateau.getJoueurCourantIHM();
-    }
-
-    public String getGameMode() {
-        return plateau.getGameMode();
     }
 
     @Override
@@ -95,15 +91,14 @@ public class GameControler extends Observable implements InterfaceControler {
         return plateau.getMessage();
     }
 
-    public void moveIA() throws InterruptedException {
-        ActionListener traitement = new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                plateau.moveIA();
-                notifyObservers(null);
-            }
-        };
-        Timer timer = new Timer(1500,traitement);
-        timer.setRepeats(false);
-        timer.start();
+    @Override
+    public void update(Observable o, Object arg) {
+       System.out.println("réceptionné depuis controller :" + (String)arg);
+       this.notifyObservers(arg);
+    }
+    
+    public void updateSocketState() throws IOException, InterruptedException{
+        plateau.envoyerUpdate();
+        plateau.receptionerUpdate();
     }
 }

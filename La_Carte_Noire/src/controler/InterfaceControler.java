@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
-import model.EquipeIHM;
 import model.JoueurIHM;
 
 public interface InterfaceControler {
@@ -17,15 +16,13 @@ public interface InterfaceControler {
 
     public ArrayList<AbstractCarteIHM> getListeCartesIHM();
 
-    public ArrayList<EquipeIHM> getEquipesIHM();
-
     public ArrayList<JoueurIHM> getJoueursIHM();
 
     public JoueurIHM getJoueurCourantIHM();
 
-    public Boolean isEquipeMode();
-
     public String getGagnant();
 
     public void saveScores();
+    
+    public String getMessage();
 }

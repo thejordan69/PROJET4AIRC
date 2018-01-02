@@ -20,9 +20,13 @@ public interface InterfacePlateau {
 
     public JoueurIHM getJoueurCourantIHM();
 
-    public Boolean isEquipeMode();
+    public String getGameMode();
 
     public String getGagnant();
     
     public void saveScores();
+    
+    public void moveIA();
+    
+    public String getMessage();
 }

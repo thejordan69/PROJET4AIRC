@@ -1,6 +1,8 @@
 package model;
 
-public abstract class AbstractCarte {
+import java.io.Serializable;
+
+public abstract class AbstractCarte implements Serializable {
     protected Couleur couleur;
     protected Coord coordonnees;
     

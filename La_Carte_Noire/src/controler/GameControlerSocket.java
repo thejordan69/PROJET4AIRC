@@ -93,12 +93,15 @@ public class GameControlerSocket extends Observable implements InterfaceControle
 
     @Override
     public void update(Observable o, Object arg) {
-       System.out.println("réceptionné depuis controller :" + (String)arg);
        this.notifyObservers(arg);
     }
     
     public void updateSocketState() throws IOException, InterruptedException{
         plateau.envoyerUpdate();
         plateau.receptionerUpdate();
+    }
+    
+    public void closeSocket(){
+        plateau.closeSocket();
     }
 }

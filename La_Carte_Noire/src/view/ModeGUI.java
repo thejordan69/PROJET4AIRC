@@ -30,7 +30,7 @@ public class ModeGUI extends JFrame {
         panel.setLayout(new AbsoluteLayout());
         
         BT_Retour = new JButton();
-        BT_Retour.setIcon(new ImageIcon(getClass().getResource("/images/Bouton about_dark.png")));
+        BT_Retour.setIcon(new ImageIcon(getClass().getResource("/images/Bouton_retour_dark.png")));
         BT_Retour.setBorder(null);
         BT_Retour.setContentAreaFilled(false);
         BT_Retour.setMargin(new Insets(0, 0, 0, 0)); 
@@ -38,20 +38,20 @@ public class ModeGUI extends JFrame {
         panel.add(BT_Retour,new AbsoluteConstraints(25, 25, -1, -1));
         
         BT_Local = new JButton();
-        BT_Local.setIcon(new ImageIcon(getClass().getResource("/images/Bouton jouer_dark.png")));
+        BT_Local.setIcon(new ImageIcon(getClass().getResource("/images/Bouton_local_dark.png")));
         BT_Local.setBorder(null);
         BT_Local.setContentAreaFilled(false);
         BT_Local.setMargin(new Insets(0, 0, 0, 0));
         BT_Local.addActionListener(this::BT_LocalActionPerformed);
-        panel.add(BT_Local,new AbsoluteConstraints(390, 200, -1, -1));
+        panel.add(BT_Local,new AbsoluteConstraints(282, 200, -1, -1));
         
         BT_Multi = new JButton();
-        BT_Multi.setIcon(new ImageIcon(getClass().getResource("/images/Bouton jouer_dark.png")));
+        BT_Multi.setIcon(new ImageIcon(getClass().getResource("/images/Bouton_reseau_dark.png")));
         BT_Multi.setBorder(null);
         BT_Multi.setContentAreaFilled(false);
         BT_Multi.setMargin(new Insets(0, 0, 0, 0));
         BT_Multi.addActionListener(this::BT_MultiActionPerformed);
-        panel.add(BT_Multi,new AbsoluteConstraints(390, 350, -1, -1));
+        panel.add(BT_Multi,new AbsoluteConstraints(282, 300, -1, -1));
         
         this.getContentPane().add(panel);
         this.pack();

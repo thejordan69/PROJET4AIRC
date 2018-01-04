@@ -34,11 +34,9 @@ import javax.swing.border.EmptyBorder;
 import model.AbstractCarteIHM;
 import model.Coord;
 import model.Couleur;
-import model.EquipeIHM;
 import model.Jeton;
 import model.JoueurIHM;
 import controler.GameControlerSocket;
-import static javafx.application.Platform.exit;
 import tools.ImagePanel;
 import tools.ImageProvider;
 
@@ -47,6 +45,7 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
     private JLayeredPane layeredPane;
     private JPanel panel, recap, recapJoueurs, recapTitres;
     private JLabel carte, jlMessage;
+    private JFrame infoFrame;
     private int xAdjustment, yAdjustment, oldIndex;
     private Dimension plateauSize, recapSize;
     private String mode, pseudo, IP;
@@ -90,7 +89,7 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
          
         this.pack();
         this.setLocationRelativeTo(null);
-        //this.setVisible(true);
+        this.setVisible(true);
     }
 
     //méthode qui permet de créer le damier
@@ -274,14 +273,27 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
         ArrayList<JoueurIHM> joueurs;
         JoueurIHM joueurCourant;
 
-        System.out.println((String) arg);
-        if(((String) arg).equals("controler_cree")){
-            return;
+        if(arg != null){
+            if(((String) arg).equals("controler_cree")){
+                return;
+            }
+            else if(mode.equals("Client") && ((String) arg).equals("no_socket")){
+                createJDialogInfo();
+                return;
+            }
+            else if(mode.equals("Serveur") && ((String) arg).equals("attente_client")){
+                createJDialogInfo();
+                return;
+            }
+            else if(mode.equals("Serveur") && ((String) arg).equals("client_connecté")){
+                infoFrame.dispose();
+            }
         }
-        else if(((String) arg).equals("no_socket")){
-            System.out.println("erruer gui creation socket");
-            //createJDialogError();
-            return;
+
+        //permet d'initialiser la JFrame la première fois
+        if(isFirst){
+            isFirst = false;
+            initComponents();
         }
         
         //permet de débloquer la JFrame lorsque le deuxième joueur a terminé son tour
@@ -368,7 +380,7 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
             winerFrame.setUndecorated(true);
             winerFrame.setLocationRelativeTo(null);
             winerFrame.setLayout(new BorderLayout());
-            JPanel panBackground = new ImagePanel("JDialog");
+            JPanel panBackground = new ImagePanel("JDialog_Finale");
             panBackground.setLayout(new BorderLayout());
             panBackground.setPreferredSize(new Dimension(700,250));
             winerFrame.add(panBackground,BorderLayout.NORTH);
@@ -403,6 +415,60 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
             gagnant.setBorder(new CompoundBorder(gagnant.getBorder(), new EmptyBorder(0,0,20,0)));   
             panBackground.add(gagnant,BorderLayout.SOUTH);
             winerFrame.setVisible(true);
+        }
+    }
+    
+    private void createJDialogInfo(){
+        if(mode.equals("Client")){
+            infoFrame = new JFrame("Erreur");
+            infoFrame.setSize(700,300);
+            infoFrame.setUndecorated(true);
+            infoFrame.setLocationRelativeTo(null);
+            infoFrame.setLayout(new BorderLayout());
+            JPanel panBackground = new ImagePanel("JDialog_Client");
+            panBackground.setLayout(new BorderLayout());
+            panBackground.setPreferredSize(new Dimension(700,250));
+            infoFrame.add(panBackground,BorderLayout.NORTH);
+            JLabel info = new JLabel("Impossible de se connecter au serveur",JLabel.CENTER);
+            info.setFont(info.getFont().deriveFont(32f));
+            info.setForeground(Color.BLACK);
+            info.setBorder(new CompoundBorder(info.getBorder(), new EmptyBorder(0,0,20,0)));
+            panBackground.add(info,BorderLayout.SOUTH);
+            JButton bouton_quitter = new JButton("Quitter");
+            bouton_quitter.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent arg0) {
+                    infoFrame.dispose();
+                }
+            });
+            bouton_quitter.setPreferredSize(new Dimension(700,50));
+            infoFrame.add(bouton_quitter,BorderLayout.SOUTH);
+            infoFrame.setVisible(true);
+        }
+        else{
+            infoFrame = new JFrame("Information");
+            infoFrame.setSize(700,300);
+            infoFrame.setUndecorated(true);
+            infoFrame.setLocationRelativeTo(null);
+            infoFrame.setLayout(new BorderLayout());
+            JPanel panBackground = new ImagePanel("JDialog_Serveur");
+            panBackground.setLayout(new BorderLayout());
+            panBackground.setPreferredSize(new Dimension(700,250));
+            infoFrame.add(panBackground,BorderLayout.NORTH);
+            JLabel info = new JLabel("En attente de la connexion du client",JLabel.CENTER);
+            info.setFont(info.getFont().deriveFont(32f));
+            info.setForeground(Color.BLACK);
+            info.setBorder(new CompoundBorder(info.getBorder(), new EmptyBorder(0,0,20,0)));
+            panBackground.add(info,BorderLayout.SOUTH);
+            JButton bouton_quitter = new JButton("Quitter");
+            bouton_quitter.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent arg0) {
+                    infoFrame.dispose();
+                    controler.closeSocket();
+                }
+            });
+            bouton_quitter.setPreferredSize(new Dimension(700,50));
+            infoFrame.add(bouton_quitter,BorderLayout.SOUTH);
+            infoFrame.setVisible(true);
         }
     }
 }

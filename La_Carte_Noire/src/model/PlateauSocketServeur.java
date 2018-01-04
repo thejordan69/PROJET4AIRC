@@ -5,25 +5,38 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Joueur;
 
 public class PlateauSocketServeur extends PlateauSocket {
     private ServerSocket socketServer;
     
     public PlateauSocketServeur(String pseudo, String IP) throws IOException {
         super(pseudo,IP);
-        initSocket(null);
-        initialiserPartie();
     } 
 
     //méthode qui permet d'initialiser la socket du serveur
     @Override
     void initSocket(String IP) {
         try {
+            //socketServer = new ServerSocket(1234);
             socketServer = new ServerSocket(1234);
-            System.out.println("SERVEUR EN ATTENTE DU CLIENT");
-            socket= socketServer.accept(); 
-            System.out.println("CLIENT CONNECTE");
+            
+            this.notifyObservers("attente_client");
+            final PlateauSocket param = this;
+            Thread t = new Thread(new Runnable() {
+                PlateauSocket plateau = param;
+                public void run() { 
+                    try { 
+                        socket = socketServer.accept();
+                        //ferme la socket serveur afin de ne conencter qu'un seul client à la fois
+                        socketServer.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PlateauSocketServeur.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    initialiserPartie();
+                    //plateau.notifyObservers("client_connecté");  
+                };
+            });
+            t.start();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -36,7 +49,7 @@ public class PlateauSocketServeur extends PlateauSocket {
     }
     
     @Override
-    void closeSocket(){
+    public void closeSocket(){
         try{
             socketServer.close();
             socket.close();
@@ -52,6 +65,7 @@ public class PlateauSocketServeur extends PlateauSocket {
         try {
             //récupération du nom du deuxième joueur quand celui-ci sera connecté
             listeJoueurs.add(new Joueur(receptionerPseudo()));
+            
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(PlateauSocketServeur.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -60,11 +74,11 @@ public class PlateauSocketServeur extends PlateauSocket {
         initJetons();
         message = "Début de la partie, c'est à " + joueurCourant.getPseudo() + " de commencer !";
         try {
+            this.notifyObservers("client_connecté");
             envoyerUpdate();
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(PlateauSocketServeur.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.notifyObservers();
     }
     
     private String receptionerPseudo() throws IOException, InterruptedException{

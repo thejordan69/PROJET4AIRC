@@ -407,7 +407,7 @@ public class PlateauGUI extends JFrame implements MouseListener, MouseMotionList
             winerFrame.setUndecorated(true);
             winerFrame.setLocationRelativeTo(null);
             winerFrame.setLayout(new BorderLayout());
-            JPanel panBackground = new ImagePanel("JDialog");
+            JPanel panBackground = new ImagePanel("JDialog_Finale");
             panBackground.setLayout(new BorderLayout());
             panBackground.setPreferredSize(new Dimension(700,250));
             winerFrame.add(panBackground,BorderLayout.NORTH);

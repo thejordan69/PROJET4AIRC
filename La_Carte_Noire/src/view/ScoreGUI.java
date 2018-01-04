@@ -38,7 +38,7 @@ public class ScoreGUI extends JFrame {
         this.setPreferredSize(new Dimension(965,620));
         
         BT_Retour = new JButton();
-        BT_Retour.setIcon(new ImageIcon(getClass().getResource("/images/Bouton about_dark.png")));
+        BT_Retour.setIcon(new ImageIcon(getClass().getResource("/images/Bouton_retour_dark.png")));
         BT_Retour.setBorder(null);
         BT_Retour.setContentAreaFilled(false);
         BT_Retour.setMargin(new Insets(0, 0, 0, 0)); 

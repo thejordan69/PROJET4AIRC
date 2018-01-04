@@ -48,7 +48,7 @@ public class ReseauGUI extends JFrame {
         panel.setLayout(new AbsoluteLayout());
         
         BT_Retour = new JButton();
-        BT_Retour.setIcon(new ImageIcon(getClass().getResource("/images/Bouton about_dark.png")));
+        BT_Retour.setIcon(new ImageIcon(getClass().getResource("/images/Bouton_retour_dark.png")));
         BT_Retour.setBorder(null);
         BT_Retour.setContentAreaFilled(false);
         BT_Retour.setMargin(new Insets(0, 0, 0, 0)); 
@@ -61,7 +61,7 @@ public class ReseauGUI extends JFrame {
         JL_Client = new JLabel("Client",JLabel.CENTER);
         JL_Client.setFont(JL_Serveur.getFont().deriveFont(18f));
         JL_Client.setForeground(Color.WHITE);
-        panel.add(JL_Serveur,new AbsoluteConstraints(250, 185, -1, -1));
+        panel.add(JL_Serveur,new AbsoluteConstraints(240, 185, -1, -1));
         panel.add(JL_Client,new AbsoluteConstraints(650, 185, -1, -1));
         
         RB_Client = new JRadioButton();
@@ -167,9 +167,9 @@ public class ReseauGUI extends JFrame {
             Matcher matcher = pattern.matcher(TF_IP.getText());
 
             if (matcher.find()){
+                JL_Erreur.setVisible(false);
                 if(!TF_Pseudo.getText().equals("")){
                     BT_Jouer.setEnabled(true);
-                    JL_Erreur.setVisible(false);
                 }
                 else{
                     BT_Jouer.setEnabled(false);

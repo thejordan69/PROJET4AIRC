@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Timer;
 import tools.Score;
 
 public abstract class PlateauSocket extends Observable implements InterfacePlateauSocket {
@@ -25,11 +28,20 @@ public abstract class PlateauSocket extends Observable implements InterfacePlate
     public PlateauSocket(String pseudo, String IP){
         this.pseudo = pseudo;    
         this.IP = IP;
+        //lancement de l'initialisation au bout de 700ms, le temps que le controler s'initialise
+        ActionListener traitement = new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                initSocket(IP);
+            }
+        };
+        Timer timer = new Timer(700,traitement);
+        timer.setRepeats(false);
+        timer.start();
     }
     
     abstract void initSocket(String IP);
     
-    abstract void closeSocket();
+    public abstract void closeSocket();
     
     public void envoyerUpdate() throws IOException, InterruptedException{
         ArrayList<Object> objets = new ArrayList<Object>();
@@ -38,16 +50,13 @@ public abstract class PlateauSocket extends Observable implements InterfacePlate
         objets.add(carteNoire);
         objets.add(joueurCourant);
         objets.add(message);
-        System.out.println("Début envoi");
         Thread envoi = new Thread(new EnvoiSocket(socket,objets));
         envoi.start();
         envoi.join(); 
-        System.out.println("Données envoyées");
     }
     
     public void receptionerUpdate() throws IOException, InterruptedException{
         ArrayList<Object> objets = new ArrayList<Object>();
-        System.out.println("Début réception");
         Thread reception = new Thread(new ReceptionSocket(socket,objets));
         reception.start();
         reception.join();
@@ -57,7 +66,6 @@ public abstract class PlateauSocket extends Observable implements InterfacePlate
         carteNoire = (CarteNoire) objets.get(2);
         joueurCourant = (Joueur) objets.get(3);
         message = (String) objets.get(4);
-        System.out.println("Données réceptionnées");
         this.notifyObservers();
     }
     

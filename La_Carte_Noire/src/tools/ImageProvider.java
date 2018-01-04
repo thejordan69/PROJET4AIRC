@@ -35,11 +35,17 @@ public class ImageProvider {
             case "menu":
                 ret = g.getAbsolutePath()+"/src/images/Fond_Menu.jpg";
                 break;
-            case "JDialog":
-                ret = g.getAbsolutePath()+"/src/images/Fond_JDialog.png";
+            case "JDialog_Finale":
+                ret = g.getAbsolutePath()+"/src/images/JDialog_Finale.png";
                 break;
             case "regles":
                 ret = g.getAbsolutePath()+"/src/images/regles.png";
+                break;
+            case "JDialog_Client":
+                ret = g.getAbsolutePath()+"/src/images/JDialog_Client.png";
+                break;
+            case "JDialog_Serveur":
+                ret = g.getAbsolutePath()+"/src/images/JDialog_Serveur.png";
                 break;
             default:
                 break;

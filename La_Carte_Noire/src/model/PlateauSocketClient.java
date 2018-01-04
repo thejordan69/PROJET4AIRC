@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.Timer;
 import view.PlateauGUISocket;
 
@@ -16,8 +15,6 @@ public class PlateauSocketClient extends PlateauSocket {
     
     public PlateauSocketClient(String pseudo, String IP) throws IOException {
         super(pseudo,IP);
-        this.notifyObservers("no_socket");
-        //initSocket(IP);
     } 
     
     //méthode qui permet d'initialiser la socket du serveur
@@ -28,12 +25,10 @@ public class PlateauSocketClient extends PlateauSocket {
             initialiserPartie();
         }catch(UnknownHostException e) {
             e.printStackTrace();
-            notifyObservers("no_socket");
-            System.out.println("notification faite niveau client");
+            this.notifyObservers("no_socket");
         }catch(IOException e) {
             e.printStackTrace();
-            notifyObservers("no_socket");
-            System.out.println("notification faite niveau client");
+            this.notifyObservers("no_socket");
         }
         //permet de fermer les sockets lors de la fermeture de l'appli
         Runtime.getRuntime().addShutdownHook(new Thread(){public void run(){
@@ -42,7 +37,7 @@ public class PlateauSocketClient extends PlateauSocket {
     }
     
     @Override
-     void closeSocket(){
+     public void closeSocket(){
         try{
             socket.close();
         }catch (IOException e) {

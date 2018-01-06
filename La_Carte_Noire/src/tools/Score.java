@@ -28,7 +28,7 @@ public class Score {
         return joueurs;
     }
     
-    private static HashMap<String,Integer> readScores() throws IOException{
+    public static HashMap<String,Integer> readScores() throws IOException{
         HashMap<String,Integer> mapScores = new HashMap<String,Integer>();
         try{
             File fichier = new File("scores.json");

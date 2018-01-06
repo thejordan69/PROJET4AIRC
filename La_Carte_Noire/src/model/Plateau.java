@@ -7,16 +7,12 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import tools.Score;
 
-public class Plateau implements InterfacePlateau {
-    private ArrayList<AbstractCarte> listeCartes;
-    private ArrayList<Joueur> listeJoueurs;
-    private HashMap<Couleur,Jeton> listeJetons;
-    private Joueur joueurCourant;
-    private CarteNoire carteNoire = null;
+public class Plateau extends AbstractPlateau implements InterfacePlateau {
     private Equipe equipe1, equipe2;
-    private String modeJeu, message;
+    private String modeJeu;
     
     public Plateau(HashMap<String,Integer> mapJoueurs, String mode){
+        super();
         //création de la collection de cartes du pateau
         this.listeCartes = creerListeCartes();
         this.modeJeu = mode;
@@ -24,18 +20,6 @@ public class Plateau implements InterfacePlateau {
         initJoueurs(mapJoueurs);
     } 
 
-    //méthode qui permet d'initialiser les jetons
-    private void initJetons(){
-        listeJetons = new HashMap<Couleur,Jeton>();
-        listeJetons.put(Couleur.bleue,new Jeton(Couleur.bleue,8));
-        listeJetons.put(Couleur.verte,new Jeton(Couleur.verte,7));
-        listeJetons.put(Couleur.rouge,new Jeton(Couleur.rouge,6));
-        listeJetons.put(Couleur.rose,new Jeton(Couleur.rose,5));
-        listeJetons.put(Couleur.jaune,new Jeton(Couleur.jaune,4));
-        listeJetons.put(Couleur.cyan,new Jeton(Couleur.cyan,3));
-        listeJetons.put(Couleur.orange,new Jeton(Couleur.orange,2));
-    }
-    
     //méthode qui permet d'initialiser les joueurs ainsi que leur potentielle équipe
     private void initJoueurs(HashMap<String,Integer> mapJoueurs){
         Joueur joueur;
@@ -77,56 +61,6 @@ public class Plateau implements InterfacePlateau {
         }      
     }
     
-    @Override
-    public Couleur getCarteCouleur(int x, int y) {
-        AbstractCarte carte = getCarte(x,y);
-        if(carte != null){
-            return carte.getCouleur();
-        }
-        return null;
-    }
-
-    @Override
-    public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
-        Couleur choixCouleur;
-        AbstractCarte carte;
-        int min, max;
-        
-        //récupération de la couleur de la carte choisie
-        choixCouleur = this.getCarteCouleur(xFinal, yFinal);
-        //si déplacement en horizontal
-        if (yInit == yFinal){
-            min = Math.min(xInit, xFinal);
-            max = Math.max(xInit, xFinal);
-            for(int i=min;i<=max;i++){
-                carte = getCarte(i,yInit);
-                if(carte != null && carte.getCouleur() == choixCouleur){
-                    gagnerCarte((Carte)carte);
-                }
-            }  
-        }
-        //si déplacement vertical
-        else if (xInit == xFinal){
-            min = Math.min(yInit, yFinal);
-            max = Math.max(yInit, yFinal);
-            for(int i=min;i<=max;i++){
-                carte = getCarte(xInit,i);
-                if(carte != null && carte.getCouleur() == choixCouleur){
-                    gagnerCarte((Carte)carte);
-                }
-            }  
-        }
-        switchJoueur();
-        return carteNoire.move(xFinal, yFinal);
-    }
-
-    //méthode qui est appellé lors d'un gain d'une carte
-    private void gagnerCarte(Carte carte){
-        joueurCourant.incrémenterCarte(carte.getCouleur());
-        miseAjourPion(carte.getCouleur());
-        carte.eliminer();
-    }
-    
     //méthode qui permet de tester si la partie est terminée
     @Override
     public boolean isEnd() {
@@ -148,88 +82,6 @@ public class Plateau implements InterfacePlateau {
        return true;
     }
 
-    @Override
-    public boolean isMoveOK(int xInit, int yInit, int xFinal, int yFinal) {
-        boolean resultat = true;
-        
-        if((xInit == xFinal) && (yInit == yFinal)){
-            this.message = "La position initiale est identique à la position finale";
-            resultat = false;
-        }
-        //si il n'y a pas de carte aux coordonées finales
-        else if(!isCarteHere(xFinal, yFinal)){
-                this.message = "Il n'y a pas de carte à cette position";
-                resultat = false;
-        }
-        //si le déplacement de la carte noire n'est pas correct
-        else if(!carteNoire.isMoveOk(xFinal, yFinal)){
-            this.message = "Le déplacement de la carte noire n'est pas correct";
-            resultat = false;
-        }
-        
-        return resultat;
-    }
-    
-    private boolean isCarteHere(int x, int y){
-        if(getCarte(x, y) != null){
-            return true;
-        }
-        return false;
-    }
-    
-    private AbstractCarte getCarte(int x, int y){
-        for(AbstractCarte carte : listeCartes){
-            if(carte.getX() == x && carte.getY() == y){
-                return carte;
-            }
-        }
-        return null;
-    }
-    
-    //méthode qui permet de renvoyer la liste des cartes qui vont être placées sur le damier
-    private ArrayList<AbstractCarte> creerListeCartes(){        
-        int i, random;
-        Coord coords;
-        AbstractCarte carte;
-        ArrayList<AbstractCarte> listeCartes = new ArrayList<>();
-        //création de deux tableaux permettant d'associer la couleur des cartes avec leur nombre respectif
-        Couleur couleurs[] = {Couleur.bleue,Couleur.verte,Couleur.rouge,Couleur.rose,Couleur.jaune,Couleur.cyan,Couleur.orange,Couleur.noire};
-	int nombres[] = {8,7,6,5,4,3,2,1};
-        
-        //boucle qui permet de créer les 36 cartes
-        for (i = 0; i < 36; i++) {
-            random = (int) (Math.random()*(8));
-            while (nombres[random]<=0) {
-                    random = (int) (Math.random()*(8));
-            }
-            //calcul des coordonnées à partir de l'index sur le plateau
-            coords = new Coord(i%6, i/6);
-            if(couleurs[random].equals(Couleur.noire)){
-                carte = new CarteNoire(couleurs[random],coords);
-                carteNoire = (CarteNoire) carte;
-            }
-            else{
-                 carte = new Carte(couleurs[random],coords);
-            }
-            //décrémentation du nombre de carte de la couleur sélectionnée
-            nombres[random]--;
-            listeCartes.add(carte);
-        }
-        return listeCartes;
-    }
-    
-    //méthode qui permet de renvoyer une copie des cartes créées
-    @Override
-    public ArrayList<AbstractCarteIHM> getListeCartesIHM(){
-        ArrayList<AbstractCarteIHM> listeCopie = new ArrayList<AbstractCarteIHM>();
-        
-        for(AbstractCarte carte : listeCartes){
-            listeCopie.add(new AbstractCarteIHM(carte));
-        }
-        
-        return listeCopie;
-    }
-    
     private void switchJoueur(){
         Equipe equipeCourante = joueurCourant.getEquipe();
         //si mode de jeu pas par équipe
@@ -263,6 +115,47 @@ public class Plateau implements InterfacePlateau {
             }  
         }
         this.message = "C'est le tour de " + joueurCourant.getPseudo() + " avec un score de " + joueurCourant.getScore();
+    }
+    
+    @Override
+    public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
+        Couleur choixCouleur;
+        AbstractCarte carte;
+        int min, max;
+        
+        //récupération de la couleur de la carte choisie
+        choixCouleur = this.getCarteCouleur(xFinal, yFinal);
+        //si déplacement en horizontal
+        if (yInit == yFinal){
+            min = Math.min(xInit, xFinal);
+            max = Math.max(xInit, xFinal);
+            for(int i=min;i<=max;i++){
+                carte = getCarte(i,yInit);
+                if(carte != null && carte.getCouleur() == choixCouleur){
+                    gagnerCarte((Carte)carte);
+                }
+            }  
+        }
+        //si déplacement vertical
+        else if (xInit == xFinal){
+            min = Math.min(yInit, yFinal);
+            max = Math.max(yInit, yFinal);
+            for(int i=min;i<=max;i++){
+                carte = getCarte(xInit,i);
+                if(carte != null && carte.getCouleur() == choixCouleur){
+                    gagnerCarte((Carte)carte);
+                }
+            }  
+        }
+        switchJoueur();
+        return carteNoire.move(xFinal, yFinal);
+    }
+    
+    //méthode qui est appellé lors d'un gain d'une carte
+    private void gagnerCarte(Carte carte){
+        joueurCourant.incrémenterCarte(carte.getCouleur());
+        miseAjourPion(carte.getCouleur());
+        carte.eliminer();
     }
     
     private void miseAjourPion(Couleur couleur){
@@ -304,21 +197,6 @@ public class Plateau implements InterfacePlateau {
         }
         
         return equipes;
-    }
-
-    @Override
-    public ArrayList<JoueurIHM> getJoueursIHM() {
-        ArrayList<JoueurIHM> joueurs = new ArrayList<JoueurIHM>();
-        for(Joueur tmp : listeJoueurs){
-            joueurs.add(new JoueurIHM(tmp));
-        }
-        
-        return joueurs;
-    }
-
-    @Override
-    public JoueurIHM getJoueurCourantIHM() {
-        return new JoueurIHM(joueurCourant);
     }
 
     @Override
@@ -430,10 +308,5 @@ public class Plateau implements InterfacePlateau {
         randomNum = ThreadLocalRandom.current().nextInt(0,cartes.size());
         carteChoisie = cartes.get(randomNum);
         move(xNoire,yNoire,carteChoisie.getX(),carteChoisie.getY());
-    }
-    
-    @Override
-    public String getMessage(){
-        return this.message;
     }
 }

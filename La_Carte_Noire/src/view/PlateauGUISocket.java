@@ -5,14 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -40,26 +37,14 @@ import controler.GameControlerSocket;
 import tools.ImagePanel;
 import tools.ImageProvider;
 
-public class PlateauGUISocket extends JFrame implements MouseListener, MouseMotionListener, Observer {
-    private GameControlerSocket controler;
-    private JLayeredPane layeredPane;
-    private JPanel panel, recap, recapJoueurs, recapTitres;
-    private JLabel carte, jlMessage;
+public class PlateauGUISocket extends AbstractPlateauGUI {
     private JFrame infoFrame;
-    private int xAdjustment, yAdjustment, oldIndex;
-    private Dimension plateauSize, recapSize;
     private String mode, pseudo, IP;
-    private boolean isBlocked = false, isFirst = true;
+    private boolean isFirst = true;
     
-    public PlateauGUISocket(Dimension plateauSize, Dimension recapSize, String pseudo, String IP, String mode) throws IOException {   
-        this.setTitle("Plateau");
-        this.setSize(new Dimension(plateauSize.width+recapSize.width,plateauSize.height+recapSize.height));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        this.setLayout(new BorderLayout());
-
-        //sauvegarde des paramètres afin de les réutiliser en cas de deuxième partie
-        this.plateauSize = plateauSize;
-        this.recapSize = recapSize;
+    public PlateauGUISocket(Dimension plateauSize, Dimension recapSize, String pseudo, String IP, String mode) throws IOException {  
+        super(plateauSize,recapSize);
+        
         this.pseudo = pseudo;
         this.IP = IP;
         this.mode = mode;
@@ -68,7 +53,8 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
         this.controler.addObserver((Observer) this); 
     }    
 
-    private void initComponents(){
+    @Override
+    protected void initComponents(){
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(plateauSize);
         getContentPane().add(layeredPane,BorderLayout.WEST);
@@ -81,31 +67,26 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
         panel.setPreferredSize(plateauSize);
         panel.setBounds(0,0,plateauSize.width,plateauSize.height);
         
-        jlMessage = new JLabel("", JLabel.CENTER);
-        jlMessage.setFont(jlMessage.getFont().deriveFont(15f));
-        getContentPane().add(jlMessage,BorderLayout.SOUTH);
+        /*jlMessage = new JLabel("", JLabel.CENTER);
+        jlMessage.setBorder(BorderFactory.createLineBorder(Color.red));
+        jlMessage.setFont(jlMessage.getFont().deriveFont(15f));*/
+        //this.getContentPane().add(jlMessage,BorderLayout.SOUTH);
         this.createGrid();
         this.createRecap(recapSize);
-         
+        
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
-    //méthode qui permet de créer le damier
-    private void createGrid(){
-        for (int i = 0; i < 36; i++) {
-            JPanel square = new JPanel(new BorderLayout());
-            square.setSize(100,100);
-            square.setOpaque(false);
-            //Ajout d'une propriété contenant l'index pour sauvegarder la position d'un élément sur le damier
-            square.putClientProperty("index",i);
-            panel.add(square);	
-        }        
+    @Override
+    protected void createGrid(){
+        super.createGrid();  
     }
     
     //méthode qui permet de créer le menu récapitulatif
-    private void createRecap(Dimension recapSize){
+    @Override
+    protected void createRecap(Dimension recapSize){
         int i =0;
         
         recap = new ImagePanel("recap");
@@ -163,42 +144,6 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
     }
                   
     @Override
-    public void mousePressed(MouseEvent e) {
-        if(isBlocked) return;
-        
-        carte = null;
-
-        Component c =  panel.findComponentAt(e.getX(), e.getY());
-        //si l'utilisateur clique sur une case vide (pas de JLabel) on stop
-        if (c instanceof JPanel) {
-            return;
-        }
-        //sinon, on récupère les coordonnées de la carte et on regarde si elle est bien de couleur noire
-        else if (c instanceof JLabel){
-            JPanel locationPanel = (JPanel) c.getParent();
-            int index = (Integer) locationPanel.getClientProperty("index");
-            Coord coords = new Coord(index%6, index/6);
-            //si c'est bien la noire alors on sauvegarde l'index courant et on fait le traitement
-            if (controler.getCarteCouleur(coords).equals(Couleur.noire)){                  
-                oldIndex = index;
-                Point parentLocation = c.getParent().getLocation();
-                xAdjustment = parentLocation.x - e.getX();
-                yAdjustment = parentLocation.y - e.getY();
-                carte = (JLabel) c;
-                carte.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
-                carte.setSize(carte.getWidth(), carte.getHeight());
-                layeredPane.add(carte, JLayeredPane.DRAG_LAYER);           
-            }
-        }  
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        if (carte == null) return;
-	carte.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
-    }
-    
-    @Override
     public void mouseReleased(MouseEvent e) {
         int movedIndex;
 		
@@ -217,7 +162,7 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
         //si la case n'est pas dans la plateau on regénère l'affichage du plateau et on stop
         else {
             update(null,null);
-            jlMessage.setText("Les coordonées sont hors limites");
+            //jlMessage.setText("Les coordonées sont hors limites");
             return;
         }
 
@@ -231,37 +176,13 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
             isBlocked = true;
             ActionListener traitement = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    try {
-                        controler.updateSocketState();
-                    } catch (IOException | InterruptedException ex) {
-                        Logger.getLogger(PlateauGUISocket.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    controler.updateSocketState();
                 }
             };
             Timer timer = new Timer(1000,traitement);
             timer.setRepeats(false);
             timer.start();
         }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override public void update(Observable o, Object arg) {
@@ -299,7 +220,7 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
         //permet de débloquer la JFrame lorsque le deuxième joueur a terminé son tour
         isBlocked = false;
         //récupère le message du plateau
-        jlMessage.setText(controler.getMessage());
+        //jlMessage.setText(controler.getMessage());
         //Efface et recrée la grille
         panel.removeAll();
         this.createGrid();
@@ -373,7 +294,7 @@ public class PlateauGUISocket extends JFrame implements MouseListener, MouseMoti
         
         //si c'est la fin de la partie, on arrête la partie, on sauvegarde les scores et on affiche le gagnant
         if(controler.isEnd()){
-            jlMessage.setText("La partie est terminée");
+            //jlMessage.setText("La partie est terminée");
             controler.saveScores();
             JDialog winerFrame = new JDialog(this,"Fin de la partie",true);
             winerFrame.setSize(700,300);

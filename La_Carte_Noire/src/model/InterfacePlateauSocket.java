@@ -1,6 +1,5 @@
 package model;
 
-import model.*;
 import java.util.ArrayList;
 
 public interface InterfacePlateauSocket {	

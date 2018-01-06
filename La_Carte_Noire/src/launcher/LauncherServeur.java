@@ -1,8 +1,6 @@
 package launcher;
 
-import java.awt.Dimension;
 import java.io.IOException;
-import view.PlateauGUISocket;
 import view.ReseauGUI;
 
 public class LauncherServeur {

@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
-import view.PlateauGUISocket;
 
-public class PlateauSocketClient extends PlateauSocket {
+public class PlateauSocketClient extends AbstractPlateauSocket {
     
     public PlateauSocketClient(String pseudo, String IP) throws IOException {
         super(pseudo,IP);
@@ -55,11 +54,7 @@ public class PlateauSocketClient extends PlateauSocket {
             //permet de mettre le client en attente du premier déplacement du serveur
             ActionListener traitement = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    try {
-                        receptionerUpdate();
-                    } catch (IOException | InterruptedException ex) {
-                        Logger.getLogger(PlateauGUISocket.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    receptionerUpdate();
                 }
             };
             Timer timer = new Timer(1000,traitement);

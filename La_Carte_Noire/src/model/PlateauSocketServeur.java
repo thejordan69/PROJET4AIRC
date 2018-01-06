@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PlateauSocketServeur extends PlateauSocket {
+public class PlateauSocketServeur extends AbstractPlateauSocket {
     private ServerSocket socketServer;
     
     public PlateauSocketServeur(String pseudo, String IP) throws IOException {
@@ -21,9 +21,9 @@ public class PlateauSocketServeur extends PlateauSocket {
             socketServer = new ServerSocket(1234);
             
             this.notifyObservers("attente_client");
-            final PlateauSocket param = this;
+            final AbstractPlateauSocket param = this;
             Thread t = new Thread(new Runnable() {
-                PlateauSocket plateau = param;
+                AbstractPlateauSocket plateau = param;
                 public void run() { 
                     try { 
                         socket = socketServer.accept();
@@ -73,12 +73,8 @@ public class PlateauSocketServeur extends PlateauSocket {
         this.listeCartes = creerListeCartes();
         initJetons();
         message = "Début de la partie, c'est à " + joueurCourant.getPseudo() + " de commencer !";
-        try {
-            this.notifyObservers("client_connecté");
-            envoyerUpdate();
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(PlateauSocketServeur.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.notifyObservers("client_connecté");
+        envoyerUpdate();
     }
     
     private String receptionerPseudo() throws IOException, InterruptedException{
